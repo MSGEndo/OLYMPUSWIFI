@@ -14,20 +14,30 @@ unit OlympusShare;
 
   How to use this program
 
-  1.  Take some photos on your camera
-  2.  Use the camera menu to select Connection to Smartphone.  This starts a camera WiFi server.
+  1.  Take some photos on your Olympus camera
+  2.  Use the Olympus camera menu to select Connection to Smartphone.  This starts the camera WiFi server.
   3.  Connect your computer to this WiFi signal in the usual way for your operating system
-  4.  Run this program, set the download directory as required - the location to which files from the camera will be transfered
-  5.  If you wish to do one image download from the SD card, just press the grey triangle once and wait
-  6.  If you wish to periodically (e.g. 60s) automatically download from the SD card then click the Repeat Timer checkbox and wait.
+  4.  Run this OlympusWIFI program
+  5.  Set the download directory as required - the location to which you wish the files from the camera to be transferred
+  6.  Option 1: Press the grey triangle once and wait for images on the SD card to be transferred to your computer's download directory
+  7.  Option 2: Click the Repeat Timer checkbox and wait for the timer (e.g. 60s) to automate image transfers periodically.
+  8.  Downloaded files will be remembered, so will not be downloaed again on later transfers.
+
+  Enjoy
+
+  Martin Gale ( 04/01/2020 Copyright.)
+  mail@isendo.com.au
+  This program is open source and can be used for commercial and non commercial purposes (MIT licence) so long as
+  full achknowledgement is made of the author's original contribution in any distribution of the derived work. The sotware is as is,
+  and no warranty of suitability of purpose or efficacy and is given, and the authors accept no liability whatsoever for its use, consequences or
+  effects.   If it is not suitable for your  purpose then do not use this software.  Otherwise, please make good use of it.
 
 Notes:
 i)   A record of the downloaded file names and other details are recorded in a file ..OlympusCameraDownloadRecord.txt.  This is delimited with
 the string '$!?' and is queried with string.contains for previous entries on deciding if to download a file or not.
-ii)  The download can be done as a single event or else on a time such that the app can run all day and not need to be switched on when needed.
-iii) Having to switch WiFi signals on the computer to connect to the camera then back to the usualy home router is a pain.  Need to auomate this.
+ii) Having to switch WiFi signals on the computer to connect to the camera then back to the usually home router is a pain.  Need to automate this.
 
-See comments in the code for further explainations
+See comments in the code for further explanations
 
 Enjoy
 
@@ -39,12 +49,6 @@ mail@isendo.com.au
 // TODO: Work out how to automatically seek and connect to the WiFi SSID signal even though another wifi signal may previously be connected - on Win and Linux
 // TODO: Check this works on Linux too - some more IFDEFs needed probably for any file paths
 // TODO: Release as open source on github and promote in Panasonic Lumix and Olympus user lists
-
-Martin Gale 01/01/2020 Copyright.
-This program is open source and can be used for commercial and non commercial purposes so long as full achknowledgement is made
-of the authors original contribution in any distribution of the dervived work. The sotware is as is, and no warranty of suitability of
-purpose or efficacy and is given, and the authors accept no liability whatsoever for its existance or use.   If it is not suitable for your
-purpose then do not use this software.  Otherwise, please make good use of it.
 }
   {$mode delphi}{$H+}
 interface
@@ -211,7 +215,7 @@ begin   // THis uses TfpHTTPClient to get from the server either a TStringlist o
        FErrorList.add('Sorry: Could not save file ' + FResponseFilename + ' [' + DateTimeToStr(Now,False) + ']');
      end;
  except;
-   beep;
+   //beep;
    If FOutputSort = oStrList then FHTTPResponseSL.clear else
    If FOutputSort = oMStream then FHTTPResponseMS.clear;
    FErrorList.add('Sorry: The Olympus camera could not be reached at ' + FHTTPRequest + ' [' + DateTimeToStr(Now,False) + ']');
@@ -652,7 +656,7 @@ begin
   {$IFDEF WINDOWS}
   Try FDownloadedList.SaveToFile(GetCurrentDir + '\OlympusCameraDownloadRecord.txt');
   except
-    beep;
+    //beep;
     ErrorList.add('Sorry: Could not save the list of downloaded files at: ' + GetCurrentDir + '\OlympusCameraDownloadRecord.txt' + ' [' + DateTimeToStr(Now,False) + ']');
   end;
   {$ELSE}

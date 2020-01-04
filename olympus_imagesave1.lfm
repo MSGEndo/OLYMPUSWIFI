@@ -1077,27 +1077,27 @@ object Form_Main: TForm_Main
             Left = 48
             Height = 424
             Top = 96
-            Width = 968
+            Width = 1056
             Lines.Strings = (
-              '  How to use this program'
+              ' How to use this program'
               ''
-              '  1.  Take some photos on your camera'
-              '  2.  Use the camera menu to select Connection to Smartphone.  This starts a camera WiFi server.'
+              '  1.  Take some photos on your Olympus camera'
+              '  2.  Use the Olympus camera menu to select Connection to Smartphone.  This starts the camera WiFi server.'
               '  3.  Connect your computer to this WiFi signal in the usual way for your operating system'
-              '  4.  Run this program, set the download directory as required - the location to which files from the camera will be transfered'
-              '  5.  If you wish to do one image download from the SD card, just press the grey triangle once and wait'
-              '  6.  If you wish to periodically (e.g. 60s) automatically download from the SD card then click the Repeat Timer checkbox and wait.     '
-              ''
-              '  Martin Gale 01/01/2020 Copyright.'
-              '  This program is open source and can be used for commercial and non commercial purposes so long as full achknowledgement is made  '
-              '   of the authors original contribution in any distribution of the dervived work. The sotware is as is, and no warranty of suitability of '
-              '  purpose or efficacy and is given, and the authors accept no liability whatsoever for its existance or use.   If it is not suitable for your  '
-              '  purpose then do not use this software.  Otherwise, please make good use of it.  '
+              '  4.  Run this OlympusWIFI program'
+              '  5.  Set the download directory as required - the location to which you wish the files from the camera to be transferred'
+              '  6.  Option 1: Press the grey triangle once and wait for images on the SD card to be transferred to your computer''s download directory'
+              '  7.  Option 2: Click the Repeat Timer checkbox and wait for the timer (e.g. 60s) to automate image transfers periodically.'
+              '  8.  Downloaded files will be remembered, so will not be downloaded again on later transfers.'
               ''
               '  Enjoy'
               ''
-              '  Martin Gale'
+              '  Martin Gale ( 04/01/2020 Copyright.)'
               '  mail@isendo.com.au'
+              '  This program is open source and can be used for commercial and non commercial purposes (MIT licence) so long as'
+              '  full acknowledgement is made of the author''s original contribution in any distribution of the derived work. The software is as is,'
+              '  and no warranty of suitability of purpose or efficacy and is given, and the authors accept no liability whatsoever for its use, consequences or'
+              '  effects.   If it is not suitable for your  purpose then do not use this software.  Otherwise, please make good use of it. '
             )
             ParentColor = True
             TabOrder = 1

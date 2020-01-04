@@ -287,6 +287,8 @@ begin;
      ImageView.Picture.Jpeg.LoadFromFile(Oilink.LastDownlowdedImage);
      ProgressBar1.position := 0;
      DisplaySDCardFiles(length(OiLink.ImageLists)-1); // updates display of which files have now been downloaded
+     ShListView_Files.Root := '';
+     ShListView_Files.Root := OiLink.DownloadDir;
      Application.ProcessMessages;
 
    end;

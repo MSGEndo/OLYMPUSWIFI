@@ -9,7 +9,7 @@
         <Filename Value="Olympus_ImageSave.lpr"/>
         <IsPartOfProject Value="True"/>
         <CursorPos Y="20"/>
-        <UsageCount Value="163"/>
+        <UsageCount Value="164"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -19,9 +19,11 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Olympus_ImageSave1"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <CursorPos X="79" Y="5"/>
-        <UsageCount Value="163"/>
+        <TopLine Value="115"/>
+        <CursorPos X="26" Y="131"/>
+        <UsageCount Value="164"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -31,21 +33,19 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="25"/>
         <CursorPos X="33" Y="2"/>
-        <UsageCount Value="160"/>
+        <UsageCount Value="161"/>
         <DefaultSyntaxHighlighter Value="HTML"/>
       </Unit2>
       <Unit3>
         <Filename Value="olympusshare.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="OlympusShare"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="624"/>
-        <CursorPos X="11" Y="655"/>
-        <UsageCount Value="126"/>
+        <CursorPos X="19" Y="13"/>
+        <UsageCount Value="127"/>
         <Bookmarks Count="2">
-          <Item0 Y="606" ID="2"/>
-          <Item1 Y="480" ID="1"/>
+          <Item0 Y="610" ID="2"/>
+          <Item1 Y="484" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
       </Unit3>
