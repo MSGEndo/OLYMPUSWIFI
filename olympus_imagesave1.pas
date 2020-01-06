@@ -173,6 +173,7 @@ begin
   DisplaySDCardFiles(b);
 end;
 
+
 procedure TForm_Main.Timer_TransferTimer(Sender: TObject);
 begin
   StartTransfer;

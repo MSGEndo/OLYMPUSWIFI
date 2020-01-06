@@ -541,9 +541,9 @@ object Form_Main: TForm_Main
       Height = 802
       Top = 1
       Width = 1221
-      ActivePage = TS_Settings
+      ActivePage = TS_Transfer
       Align = alClient
-      TabIndex = 2
+      TabIndex = 0
       TabOrder = 0
       object TS_Transfer: TTabSheet
         Caption = 'Transfer Files    '
@@ -1085,7 +1085,7 @@ object Form_Main: TForm_Main
               '  2.  Use the Olympus camera menu to select Connection to Smartphone.  This starts the camera WiFi server.'
               '  3.  Connect your computer to this WiFi signal in the usual way for your operating system'
               '  4.  Run this OlympusWIFI program'
-              '  5.  Set the download directory as required - the location to which you wish the files from the camera to be transferred'
+              '  5.  Set the download directory as required ("Transfer Files to This Directory") where  from the will be transferred'
               '  6.  Option 1: Press the grey triangle once and wait for images on the SD card to be transferred to your computer''s download directory'
               '  7.  Option 2: Click the Repeat Timer checkbox and wait for the timer (e.g. 60s) to automate image transfers periodically.'
               '  8.  Downloaded files will be remembered, so will not be downloaded again on later transfers.'

@@ -12,23 +12,23 @@ unit OlympusShare;
   not have an app for PC, Mac or Linux desktops. So I have made this one to use. Also the phone apps do not allow automated download on the fly like
   the old EyeFi SD cards did, sadly now not manufactured anymore.
 
-  How to use this program
+  How to use  How to use this program
 
   1.  Take some photos on your Olympus camera
   2.  Use the Olympus camera menu to select Connection to Smartphone.  This starts the camera WiFi server.
   3.  Connect your computer to this WiFi signal in the usual way for your operating system
   4.  Run this OlympusWIFI program
-  5.  Set the download directory as required - the location to which you wish the files from the camera to be transferred
+  5.  Set the download directory as required ("Transfer Files to This Directory") where  from the will be transferred
   6.  Option 1: Press the grey triangle once and wait for images on the SD card to be transferred to your computer's download directory
   7.  Option 2: Click the Repeat Timer checkbox and wait for the timer (e.g. 60s) to automate image transfers periodically.
-  8.  Downloaded files will be remembered, so will not be downloaed again on later transfers.
+  8.  Downloaded files will be remembered, so will not be downloaded again on later transfers.
 
   Enjoy
 
   Martin Gale ( 04/01/2020 Copyright.)
   mail@isendo.com.au
   This program is open source and can be used for commercial and non commercial purposes (MIT licence) so long as
-  full achknowledgement is made of the author's original contribution in any distribution of the derived work. The sotware is as is,
+  full acknowledgement is made of the author's original contribution in any distribution of the derived work. The software is as is,
   and no warranty of suitability of purpose or efficacy and is given, and the authors accept no liability whatsoever for its use, consequences or
   effects.   If it is not suitable for your  purpose then do not use this software.  Otherwise, please make good use of it.
 
@@ -280,11 +280,11 @@ begin
   SetLength(FDirList,0);
   SetLength(FImageLists,0);
   ErrorList         := TStringList.create;
-  {$IFDEF WINDOWS}
+  //{$IFDEF WINDOWS}
   FDownLoadDir      := GetCurrentDir;
-  {$ELSE}
-  FDownLoadDir      := GetCurrentDir + '/Images';
-  {$ENDIF}
+  //{$ELSE}
+  FDownLoadDir      := GetCurrentDir;
+  //{$ENDIF}
   FDownloadedList   := TStringList.create;
   FLastDownloadTime := Now;
   FLastDownloaded   := '';
@@ -621,7 +621,7 @@ begin
             {$IFDEF WINDOWS}
             FStream := GetDCIMResponseMS(AHTTPRequest, SaveImageDir + '\' + FImageLists[a].[b].AFileName); // Queries the Olympus camera http server for a response, saves result to file
             {$ELSE}
-            FStream := GetDCIMResponseMS(AHTTPRequest, SaveImageDir + '/' + FImageList[a].[b].AFileName); // Queries the Olympus camera http server for a response, saves result to file
+            FStream := GetDCIMResponseMS(AHTTPRequest, SaveImageDir + '/' + FImageLists[a].[b].AFileName); // Queries the Olympus camera http server for a response, saves result to file
             // If Linux or Mac need a / not a \ in the path.
             {$ENDIF}
             FreeAndNil(FStream);
@@ -635,7 +635,7 @@ begin
             {$IFDEF WINDOWS}   // Cross platform hassle fixed
             FLastDownloaded := Self.DownloadDir + '\' + FImageLists[a].[b].AFileName;   // records the path and filename of the last downloaded image for display
             {$ELSE}
-            FLastDownloaded := Self.DownloadDir + '/' + FImageList[b].AFileName;
+            FLastDownloaded := Self.DownloadDir + '/' + FImageList[a].[b].AFileName;
             // If Linux or Mac need a / not a \ in the path.
             {$ENDIF}
 

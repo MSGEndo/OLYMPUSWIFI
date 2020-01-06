@@ -745,7 +745,6 @@ object Form_Main: TForm_Main
               RowSelect = True
               TabOrder = 0
               ObjectTypes = [otNonFolders]
-              Root = 'c:\mg\Imagebank\Dental\Temp'
             end
             object Label2: TLabel
               Left = 15
@@ -784,7 +783,6 @@ object Form_Main: TForm_Main
               Height = 29
               Top = 40
               Width = 456
-              Directory = 'c:\mg\Imagebank\Dental\Temp'
               RootDir = 'c:\'
               ShowHidden = False
               ButtonWidth = 23
@@ -793,7 +791,6 @@ object Form_Main: TForm_Main
               MaxLength = 0
               TabOrder = 1
               OnChange = DirEdit_ImagesChange
-              Text = 'c:\mg\Imagebank\Dental\Temp'
             end
             object Btn_Refresh1: TButton
               Left = 388
@@ -1085,7 +1082,7 @@ object Form_Main: TForm_Main
               '  2.  Use the Olympus camera menu to select Connection to Smartphone.  This starts the camera WiFi server.'
               '  3.  Connect your computer to this WiFi signal in the usual way for your operating system'
               '  4.  Run this OlympusWIFI program'
-              '  5.  Set the download directory as required - the location to which you wish the files from the camera to be transferred'
+              '  5.  Set the download directory as required ("Transfer Files to This Directory") where  from the will be transferred'
               '  6.  Option 1: Press the grey triangle once and wait for images on the SD card to be transferred to your computer''s download directory'
               '  7.  Option 2: Click the Repeat Timer checkbox and wait for the timer (e.g. 60s) to automate image transfers periodically.'
               '  8.  Downloaded files will be remembered, so will not be downloaded again on later transfers.'
