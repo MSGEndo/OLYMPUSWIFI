@@ -8,6 +8,7 @@ object Form_Main: TForm_Main
   ClientWidth = 1343
   OnClose = FormClose
   OnCreate = FormCreate
+  LCLVersion = '2.0.6.0'
   object Panel1: TPanel
     Left = 0
     Height = 66
@@ -625,7 +626,7 @@ object Form_Main: TForm_Main
               Top = 32
               Width = 440
               Color = 6908265
-              ItemHeight = 0
+              ItemHeight = 21
               OnClick = CLBox_SDDirClick
               TabOrder = 0
             end
@@ -667,7 +668,7 @@ object Form_Main: TForm_Main
               Top = 248
               Width = 440
               Color = 6908265
-              ItemHeight = 0
+              ItemHeight = 21
               MultiSelect = True
               TabOrder = 1
             end
@@ -1026,7 +1027,7 @@ object Form_Main: TForm_Main
           Width = 1213
           Align = alClient
           Color = 6316128
-          ItemHeight = 0
+          ItemHeight = 21
           MultiSelect = True
           OnSelectionChange = ChLBox_DLHxSelectionChange
           TabOrder = 1

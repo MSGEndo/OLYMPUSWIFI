@@ -1,7 +1,7 @@
 unit OlympusShare;
 { Summary: This unit allows the user to download images from a wireless enabled Olympus camera, leaving the originals on the SD card.
 
-  OS:      Windows 10 (working well), Ubuntu 18.04 (not working yet), Mac OS not tested
+  OS:      Windows 10 and Ubuntu 18.04 both working well, Mac OS not tested
   DevTool: Lazarus2.06/FPC3.04
   Camera: Olympus OM-D E-M10
   How it works: Main class TOiShareReader, inherted from a TfpHTTPClient component, manages connecion to the camera oer a wireless signal.
@@ -9,7 +9,7 @@ unit OlympusShare;
                 Menu|Package!Install/Uninstall Packages.
 
   Why develop this program?  Olympus makes Android and iOS apps (Oi.Share) to allow WiFi download of images from their camera but do
-  not have an app for PC, Mac or Linux desktops. So I have made this one to use. Also the phone apps do not allow automated download on the fly like
+  not have an app for PC, Mac or Linux desktops. So I have made this one to use.  Also the phone apps do not allow automated download on the fly like
   the old EyeFi SD cards did, sadly now not manufactured anymore.
 
   How to use  How to use this program
@@ -44,11 +44,10 @@ Enjoy
 Martin Gale
 mail@isendo.com.au
 
-// TODO: There is still a very small memory leak somewhere of about $50k per access to the server - find this and fix it.
-// TODO: Implement only downloading selected filetypes
+// TODO: There is still a very small memory leak somewhere of about $50k per access to the server - find this and fix it
 // TODO: Work out how to automatically seek and connect to the WiFi SSID signal even though another wifi signal may previously be connected - on Win and Linux
-// TODO: Check this works on Linux too - some more IFDEFs needed probably for any file paths
 // TODO: Release as open source on github and promote in Panasonic Lumix and Olympus user lists
+
 }
   {$mode delphi}{$H+}
 interface
@@ -127,7 +126,7 @@ public
  ErrorList:  TStringList;   // Holds a listing of any errors encountered in the program.
  IsDownloading: boolean;    // Prevents further attepts at server contact when server already connected
  TransferNow: TTransferImages;
- Constructor Create(AOwner: TComponent);
+ Constructor Create;
  Destructor  Destroy; override;
  Procedure   RegisterAllSDCardFilesAsDownloaded;
  Function    CountFilesForDownload: integer;
@@ -224,9 +223,8 @@ end;
 
 { TOIShareReader }
 
-constructor TOIShareReader.Create(AOwner: TComponent);
+constructor TOIShareReader.Create;
 begin
- //inherited Create(AOwner);
  Initialize;
 end;
 
@@ -273,7 +271,7 @@ end;
 
 procedure TOIShareReader.Initialize;     // Sets up the program initial default state
 var
-  a, Found: integer;
+  a: integer;
 begin
   FServerAddr       := 'http://oishare'; // 'http://oishare' typically for Olympus camera. 'http://oishare/DCIM' to access files (no need for /*.*)
   FDCIMDir          := '/DCIM';          // typically '/DCIM'
@@ -283,7 +281,7 @@ begin
   //{$IFDEF WINDOWS}
   FDownLoadDir      := GetCurrentDir;
   //{$ELSE}
-  FDownLoadDir      := GetCurrentDir;
+  //FDownLoadDir      := GetCurrentDir;
   //{$ENDIF}
   FDownloadedList   := TStringList.create;
   FLastDownloadTime := Now;

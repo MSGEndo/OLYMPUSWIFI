@@ -27,7 +27,7 @@
 #
 
 # Lazarus compiler-generated binaries (safe to delete)
-*.exe
+#*.exe
 *.dll
 *.lfm
 *.bpi

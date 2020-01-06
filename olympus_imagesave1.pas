@@ -1,13 +1,15 @@
 unit Olympus_ImageSave1;
 
+{See OlumpusShare.pas for notes on this app}
+
 {$mode delphi}{$H+}
 
 interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, CheckLst,
-  ExtCtrls, ComCtrls, ShellCtrls, Arrow, EditBtn, Spin, Buttons, RTTICtrls,
-  OlympusShare, fphttpclient;
+  ExtCtrls, ComCtrls, ShellCtrls, Arrow, EditBtn, Buttons, RTTICtrls,
+  OlympusShare;
 type
 
   { TForm_Main }
@@ -81,13 +83,13 @@ type
     procedure CBox_DLHxClick(Sender: TObject);
     procedure ChBox_TimerClick(Sender: TObject);
     procedure CB_SDFilesClick(Sender: TObject);
-    procedure ChLBox_DLHxSelectionChange(Sender: TObject; User: boolean);
+    procedure ChLBox_DLHxSelectionChange(Sender: TObject);
     procedure DirEdit_ImagesChange(Sender: TObject);
     procedure Edit_ServerAddrExit(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure Timer_TransferTimer(Sender: TObject);
-    procedure UpDown_TimeSetChanging(Sender: TObject; var AllowChange: Boolean);
+    procedure UpDown_TimeSetChanging(Sender: TObject);
   private
 
   public
@@ -106,7 +108,7 @@ implementation
 
 procedure TForm_Main.FormCreate(Sender: TObject);
 begin
-  OiLink := TOiShareReader.create(Form_Main);
+  OiLink                   := TOiShareReader.create;
   Edit_ServerAddr.text     := 'http://oishare';
   OiLink.ServerAddr        := Edit_ServerAddr.text;
   DirEdit_Images.Text      := OiLink.DownloadDir;
@@ -179,8 +181,7 @@ begin
   StartTransfer;
 end;
 
-procedure TForm_Main.UpDown_TimeSetChanging(Sender: TObject;
-  var AllowChange: Boolean);
+procedure TForm_Main.UpDown_TimeSetChanging(Sender: TObject);
 begin
   Label_TimeSet.caption := InttoStr(UpDown_TimeSet.Position);
   Timer_Transfer.Interval := 1000 * UpDown_TimeSet.Position;
@@ -223,7 +224,7 @@ begin
   CLBox_SDImages.CheckAll(cbUnChecked);
 end;
 
-procedure TForm_Main.ChLBox_DLHxSelectionChange(Sender: TObject; User: boolean);
+procedure TForm_Main.ChLBox_DLHxSelectionChange(Sender: TObject);
 var                                                        // Sets the checkbox to checked if files are also already selected
   a: integer;
 begin
@@ -238,7 +239,7 @@ end;
 
 procedure TForm_Main.Btn_DeleteDLHxFilesClick(Sender: TObject); // Deletes records of previously downloaded files from DownloadList
 var                                                             // This means that if the file is found again on the SD card then it will be downloaded again
-  a, DLDir: integer;
+  a: integer;
 begin
  a := 0;
  Repeat
@@ -351,7 +352,7 @@ begin
  {$IFDEF WINDOWS}
  //OiLink.ErrorList.SaveToFile(GetCurrentDir + '\' + 'OlympusCameraLinkErrorLog[' + FormatDateTime('dd_mm_yyyy_hh_nn_ss',Now) + '].txt' );
  {$ELSE}
- OiLink.ErrorList.SaveToFile(GetCurrentDir + '/' + 'OlympusCameraLinkErrorLog[' + FormatDateTime('dd_mm_yyyy_hh_nn_ss',Now) + '].txt' );
+// OiLink.ErrorList.SaveToFile(GetCurrentDir + '/' + 'OlympusCameraLinkErrorLog[' + FormatDateTime('dd_mm_yyyy_hh_nn_ss',Now) + '].txt' );
  {$ENDIF}
  OiLink.free;
 
