@@ -198,6 +198,7 @@ Begin;
  or  // exits when gets to TStringlist line end code
  (AllPos >= length(AllText) + 2 );   // +1 because S1 is now the char two before AllPos
  Inc(LineNo);
+  If length(result) > 1 then Delete(Result,1,2);   // Added this line 07/01/20 as initial S2,S3 which becomes S1,S2 are spaces #32 and not in the original file
  if AllPos >= length(AllText) then FileEnd := true;
 End;
 

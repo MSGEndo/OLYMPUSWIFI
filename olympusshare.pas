@@ -634,13 +634,18 @@ begin
             {$IFDEF WINDOWS}   // Cross platform hassle fixed
             FLastDownloaded := Self.DownloadDir + '\' + FImageLists[a].[b].AFileName;   // records the path and filename of the last downloaded image for display
             {$ELSE}
-            FLastDownloaded := Self.DownloadDir + '/' + FImageList[a].[b].AFileName;
+            FLastDownloaded := Self.DownloadDir + '/' + FImageLists[a].[b].AFileName;
             // If Linux or Mac need a / not a \ in the path.
             {$ENDIF}
 
             inc(c); // counts how many downloads already done so far, for updating the GUI Progressbar
             If FileExists(FLastDownloaded) then
-            Form_Main.ImageView.Picture.Jpeg.LoadFromFile(FLastDownloaded);
+            begin
+              If Uppercase(ExtractFileExt(FLastDownloaded)) = '.JPG' then
+              Form_Main.ImageView.Picture.Jpeg.LoadFromFile(FLastDownloaded) else
+              If Uppercase(ExtractFileExt(FLastDownloaded)) = '.BMP' then
+              Form_Main.ImageView.Picture.Bitmap.LoadFromFile(FLastDownloaded);
+            end;
 
           end;  // Updates the GUI
           If c > 0 then Form_Main.OnUpdateGUI(round((c/d)*100)) else

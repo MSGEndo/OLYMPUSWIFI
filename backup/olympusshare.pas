@@ -297,8 +297,9 @@ begin
     FDownloadedList := TStringList.create;
   end;
     a := FindDownloadRecord;
-    If a > -1 then
-    FDownLoadDir := Copy(FDownloadedList.strings[a],13,length(FDownloadedList.strings[a])-12);
+    If (a > -1) and (length(FDownloadedList.strings[a]) > 12) then // i.e. 'DownloadDir='
+    FDownLoadDir := Copy(FDownloadedList.strings[a],13,length(FDownloadedList.strings[a])-12) else
+    FDownloadDir := GetCurrentDir;
     If not DirectoryExists(FDownLoadDir) then FDownloadDir := GetCurrentDir;
 end;
 
@@ -639,7 +640,12 @@ begin
 
             inc(c); // counts how many downloads already done so far, for updating the GUI Progressbar
             If FileExists(FLastDownloaded) then
-            Form_Main.ImageView.Picture.Jpeg.LoadFromFile(FLastDownloaded);
+            begin
+              If Uppercase(ExtractFileExt(FLastDownloaded)) = '.JPG' then
+              Form_Main.ImageView.Picture.Jpeg.LoadFromFile(FLastDownloaded) else
+              If Uppercase(ExtractFileExt(FLastDownloaded)) = '.BMP' then
+              Form_Main.ImageView.Picture.Bitmap.LoadFromFile(FLastDownloaded);
+            end;
 
           end;  // Updates the GUI
           If c > 0 then Form_Main.OnUpdateGUI(round((c/d)*100)) else
