@@ -8,7 +8,6 @@ object Form_Main: TForm_Main
   ClientWidth = 1343
   OnClose = FormClose
   OnCreate = FormCreate
-  LCLVersion = '2.0.6.0'
   object Panel1: TPanel
     Left = 0
     Height = 66
@@ -16,6 +15,8 @@ object Form_Main: TForm_Main
     Width = 1343
     Align = alTop
     Caption = 'OLYMPUS CAMERA:  AUTOMATIC WIFI IMAGE DOWNLOAD'
+    ClientHeight = 66
+    ClientWidth = 1343
     Color = 4737096
     Font.CharSet = ANSI_CHARSET
     Font.Color = clWhite
@@ -27,6 +28,23 @@ object Form_Main: TForm_Main
     ParentColor = False
     ParentFont = False
     TabOrder = 0
+    object Button1: TButton
+      Left = 1211
+      Height = 25
+      Top = 25
+      Width = 75
+      Anchors = [akTop, akRight]
+      Caption = 'Help'
+      Font.CharSet = ANSI_CHARSET
+      Font.Color = clWhite
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Pitch = fpVariable
+      Font.Quality = fqDraft
+      OnClick = Button1Click
+      ParentFont = False
+      TabOrder = 0
+    end
   end
   object Panel2: TPanel
     Left = 0
@@ -537,7 +555,7 @@ object Form_Main: TForm_Main
     ParentColor = False
     ParentFont = False
     TabOrder = 2
-    object PageControl1: TPageControl
+    object PageControl_Main: TPageControl
       Left = 1
       Height = 802
       Top = 1
@@ -626,7 +644,7 @@ object Form_Main: TForm_Main
               Top = 32
               Width = 440
               Color = 6908265
-              ItemHeight = 21
+              ItemHeight = 0
               OnClick = CLBox_SDDirClick
               TabOrder = 0
             end
@@ -668,7 +686,7 @@ object Form_Main: TForm_Main
               Top = 248
               Width = 440
               Color = 6908265
-              ItemHeight = 21
+              ItemHeight = 0
               MultiSelect = True
               TabOrder = 1
             end
@@ -1027,7 +1045,7 @@ object Form_Main: TForm_Main
           Width = 1213
           Align = alClient
           Color = 6316128
-          ItemHeight = 21
+          ItemHeight = 0
           MultiSelect = True
           OnSelectionChange = ChLBox_DLHxSelectionChange
           TabOrder = 1

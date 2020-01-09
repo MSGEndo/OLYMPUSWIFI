@@ -22,6 +22,7 @@ type
     Btn_Refresh1: TButton;
     Btn_DeleteDLHxFiles: TButton;
     Btn_CancelDL: TButton;
+    Button1: TButton;
     CBox_DLHx: TCheckBox;
     ChBox_Timer: TCheckBox;
     CB_SDFiles: TCheckBox;
@@ -69,6 +70,7 @@ type
     UpDown_TimeSet: TUpDown;
 
     //procedure Button1Click(Sender: TObject);  // original proof of concept
+    procedure FormCreate(Sender: TObject);
     procedure Btn_CancelDLClick(Sender: TObject);
     procedure Btn_MarkAllDLedClick(Sender: TObject);
     procedure Btn_Refresh1Click(Sender: TObject);
@@ -86,10 +88,10 @@ type
     procedure ChLBox_DLHxSelectionChange(Sender: TObject);
     procedure DirEdit_ImagesChange(Sender: TObject);
     procedure Edit_ServerAddrExit(Sender: TObject);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
-    procedure FormCreate(Sender: TObject);
     procedure Timer_TransferTimer(Sender: TObject);
     procedure UpDown_TimeSetChanging(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+
   private
 
   public

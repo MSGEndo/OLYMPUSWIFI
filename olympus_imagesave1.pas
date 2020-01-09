@@ -22,6 +22,7 @@ type
     Btn_Refresh1: TButton;
     Btn_DeleteDLHxFiles: TButton;
     Btn_CancelDL: TButton;
+    Button1: TButton;
     CBox_DLHx: TCheckBox;
     ChBox_Timer: TCheckBox;
     CB_SDFiles: TCheckBox;
@@ -49,7 +50,7 @@ type
     Label_UseTimeSet2: TLabel;
     Memo1: TMemo;
     Memo_Errors: TMemo;
-    PageControl1: TPageControl;
+    PageControl_Main: TPageControl;
     Panel1: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
@@ -69,6 +70,7 @@ type
     UpDown_TimeSet: TUpDown;
 
     //procedure Button1Click(Sender: TObject);  // original proof of concept
+    procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Btn_CancelDLClick(Sender: TObject);
     procedure Btn_MarkAllDLedClick(Sender: TObject);
@@ -128,6 +130,11 @@ begin
     Label_Transfer.caption  := 'Transfer Files Now';
     Timer_Transfer.enabled := false;
   end;
+end;
+
+procedure TForm_Main.Button1Click(Sender: TObject);
+begin
+  PageControl_Main.ActivePageIndex := 2;
 end;
 
 Procedure TForm_Main.UpdateDLoadList;
