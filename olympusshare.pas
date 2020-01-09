@@ -129,12 +129,12 @@ public
  Constructor Create;
  Destructor  Destroy; override;
  Procedure   RegisterAllSDCardFilesAsDownloaded;
+ Procedure   RememberDownloadDir;
  Function    CountFilesForDownload: integer;
  Function    DCIMListToStringList(ADCIMList: TDCIMList; AListTypes: ListTypes): TStringList;
  Procedure   GetSDCardData;
  Procedure   DownloadImages(SaveImageDir: String);
  Function    BeautifyDownloadList: TStringList;
- Procedure   RememberDownloadDir;
 
 Published
  property ServerAddr:       string      read FServerAddr       write FServerAddr;        // typically for Olympus camera 'http://oishare'
@@ -296,7 +296,7 @@ begin
   Except;
     FDownloadedList := TStringList.create;
   end;
-    a := FindDownloadRecord;
+    a := FindDownloadRecord; // if no file found then -1
     If (a > -1) and (length(FDownloadedList.strings[a]) > 12) then // i.e. 'DownloadDir='
     FDownLoadDir := Copy(FDownloadedList.strings[a],13,length(FDownloadedList.strings[a])-12) else
     FDownloadDir := GetCurrentDir;
@@ -316,11 +316,66 @@ begin
   FreeAndNil(ErrorList);
 end;
 
+
+procedure TOIShareReader.RegisterAllSDCardFilesAsDownloaded;
+var            // Checks the SD card for files and marks them all as previously downloaded
+ a,b: integer; // This is useful if you start using an SD card from another camera which has many previous images on it
+begin;         // which have not been downloaded by this program, and you do not wish to download these historical images now
+  GetSDCardData;
+  If length(FImageLists) > 0 then
+  For a := 0 to length(FImageLists) -1 do
+  begin;
+    If (length(FImageLists[a]) > 0) then
+    For b := 0 to length(FImageLists[a]) -1 do
+    begin
+      FImageLists[a].[b].ADownloaded := true;
+      If not FDownloadedList.Text.Contains(
+             FImageLists[a].[b].APath + '$!?' + FImageLists[a].[b].AFileName + '$!?' +
+             FImageLists[a].[b].ADate + '$!?' + FImageLists[a].[b].ATime) then
+      FDownloadedList.add(
+             FImageLists[a].[b].APath + '$!?' + FImageLists[a].[b].AFileName + '$!?' +
+             FImageLists[a].[b].ADate + '$!?' + FImageLists[a].[b].ATime     + '$!?' + BoolToStr(FImageLists[a].[b].ADownloaded));
+    end;
+  end;
+  RememberDownloadDir;
+  {$IFDEF WINDOWS}
+  Try FDownloadedList.SaveToFile(GetCurrentDir + '\OlympusCameraDownloadRecord.txt');
+  except
+    beep;
+    ErrorList.add('Sorry: Could not save the list of downloaded files at: ' + GetCurrentDir + '\OlympusCameraDownloadRecord.txt' + ' [' + DateTimeToStr(Now,False) + ']');
+  end;
+  {$ELSE}
+  FDownloadedList.SaveToFile(GetCurrentDir + '/OlympusCameraDownloadRecord.txt');
+  {$ENDIF}
+end;
+
+
+function TOIShareReader.CountFilesForDownload: integer; // Counts how many images need downloading
+var             // Updates and tallies the number of image files on the SD card due for downoad
+ a, b: integer; // Make sure you run GetSDCardData first to have a fresh file listing
+begin;
+  Result := 0;
+  For a := 0 to length(FImageLists) -1 do
+  begin;
+    For b := 0 to length(FImageLists[a]) -1 do
+    begin;
+      If FDownloadedList.Text.Contains(  // checks the download records again to be sure, and updates ADownloaded field
+         FImageLists[a].[b].APath + '$!?' + FImageLists[a].[b].AFileName + '$!?' +
+         FImageLists[a].[b].ADate + '$!?' + FImageLists[a].[b].ATime) then
+         FImageLists[a].[b].ADownloaded := true else
+         FImageLists[a].[b].ADownloaded := false;
+      If FImageLists[a].[b].ADownloaded = false then
+      Inc(Result);
+    end;
+  end;
+end;
+
+
 Function TOIShareReader.FindDownloadRecord: integer;
 var  // Identifies where the download directory record is in the OlympusCameraDownloadRecord.txt file
   a, Found: integer;        // All this so I dont use TIniFile which is not available on Linux!
 begin
-  Result := -1;
+  Found  := -1;
   If (FDownloadedList <> nil)    and
      (FDownloadedList.count > 0) then
   begin;
@@ -360,6 +415,19 @@ function TOIShareReader.GetDCIMList(AHTTPResponse: TStringList): TDCIMList;  // 
 var                                                                          // NB: Need to specify System.delete for text deletions otherwaise calls TFPHTTPClient.delete instead
  ts1: string;
  a, b, S1, S2: integer;
+ {THE FORMAT FOR THE CAMERA SERVER RESPONSE JAVASCRIPT ARRAY IS
+
+<script type="text/javascript">
+wlansd = new Array();
+wlansd[0]="/DCIM/101OLYMP/*.*,ZC080001.JPG,1072607,0,20360,31741";
+wlansd[1]="/DCIM/101OLYMP/*.*,ZC080002.JPG,1079420,0,20360,31752";
+...
+
+
+WHERE THE ELEMENTES DENOTE: PATH, FILENAME, FILEZIZE, UNKNOWN, DATE, TIME
+Stil have yet to figure out what units the date and time are in
+ }
+
 begin
   Setlength(Result,0);
   If (AHTTPResponse <> nil)    and
@@ -448,71 +516,14 @@ begin
   end;
 end;
 
-procedure TOIShareReader.RememberDownloadDir;
+procedure TOIShareReader.RememberDownloadDir;    // Update the saved download directory to file too
 var
   a: integer;
 begin
-    // Update the saved download directory to file too
-
-
-
   a := FindDownloadRecord;
   If a > -1 then
   FDownloadedList[a] :=    'DownloadDir=' + FDownloadDir  else
   FDownloadedList.Insert(0,'DownloadDir=' + FDownloadDir);
-end;
-
-procedure TOIShareReader.RegisterAllSDCardFilesAsDownloaded;
-var            // Checks the SD card for files and marks them all as previously downloaded
- a,b: integer; // This is useful if you start using an SD card from another camera which has many previous images on it
-begin;         // which have not been downloaded by this program, and you do not wish to download these historical images now
-  GetSDCardData;
-  If length(FImageLists) > 0 then
-  For a := 0 to length(FImageLists) -1 do
-  begin;
-    If (length(FImageLists[a]) > 0) then
-    For b := 0 to length(FImageLists[a]) -1 do
-    begin
-      FImageLists[a].[b].ADownloaded := true;
-      If not FDownloadedList.Text.Contains(
-             FImageLists[a].[b].APath + '$!?' + FImageLists[a].[b].AFileName + '$!?' +
-             FImageLists[a].[b].ADate + '$!?' + FImageLists[a].[b].ATime) then
-      FDownloadedList.add(
-             FImageLists[a].[b].APath + '$!?' + FImageLists[a].[b].AFileName + '$!?' +
-             FImageLists[a].[b].ADate + '$!?' + FImageLists[a].[b].ATime     + '$!?' + BoolToStr(FImageLists[a].[b].ADownloaded));
-    end;
-  end;
-  RememberDownloadDir;
-  {$IFDEF WINDOWS}
-  Try FDownloadedList.SaveToFile(GetCurrentDir + '\OlympusCameraDownloadRecord.txt');
-  except
-    beep;
-    ErrorList.add('Sorry: Could not save the list of downloaded files at: ' + GetCurrentDir + '\OlympusCameraDownloadRecord.txt' + ' [' + DateTimeToStr(Now,False) + ']');
-  end;
-  {$ELSE}
-  FDownloadedList.SaveToFile(GetCurrentDir + '/OlympusCameraDownloadRecord.txt');
-  {$ENDIF}
-end;
-
-
-function TOIShareReader.CountFilesForDownload: integer; // Counts how many images need downloading
-var             // Updates and tallies the number of image files on the SD card due for downoad
- a, b: integer; // Make sure you run GetSDCardData first to have a fresh file listing
-begin;
-  Result := 0;
-  For a := 0 to length(FImageLists) -1 do
-  begin;
-    For b := 0 to length(FImageLists[a]) -1 do
-    begin;
-      If FDownloadedList.Text.Contains(  // checks the download records again to be sure, and updates ADownloaded field
-         FImageLists[a].[b].APath + '$!?' + FImageLists[a].[b].AFileName + '$!?' +
-         FImageLists[a].[b].ADate + '$!?' + FImageLists[a].[b].ATime) then
-         FImageLists[a].[b].ADownloaded := true else
-         FImageLists[a].[b].ADownloaded := false;
-      If FImageLists[a].[b].ADownloaded = false then
-      Inc(Result);
-    end;
-  end;
 end;
 
 function TOIShareReader.GetDCIMDirList(AServerURL: String): TDCIMList; // Queries the server for a list of directories on the SD card

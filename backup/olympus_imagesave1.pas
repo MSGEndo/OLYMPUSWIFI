@@ -89,7 +89,7 @@ type
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure Timer_TransferTimer(Sender: TObject);
-    procedure UpDown_TimeSetChanging(Sender: TObject; var AllowChange: Boolean);
+    procedure UpDown_TimeSetChanging(Sender: TObject);
   private
 
   public
@@ -181,8 +181,7 @@ begin
   StartTransfer;
 end;
 
-procedure TForm_Main.UpDown_TimeSetChanging(Sender: TObject;
-  var AllowChange: Boolean);
+procedure TForm_Main.UpDown_TimeSetChanging(Sender: TObject);
 begin
   Label_TimeSet.caption := InttoStr(UpDown_TimeSet.Position);
   Timer_Transfer.Interval := 1000 * UpDown_TimeSet.Position;

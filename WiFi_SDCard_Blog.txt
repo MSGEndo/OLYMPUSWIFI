@@ -1,0 +1,207 @@
+https://nerdtechy.com/best-wifi-sd-card
+
+
+Guide to the Best WiFi Enabled SD Memory Card
+TechGuru August 5, 2019 Cameras, Memory No Comments
+
+We spend a lot of time reviewing the latest technology. It’s what we do. But every once in a while, something comes along that surprises even us. Flash memory was one of those advances.
+
+Now that flash memory has been around for years, it seems like something we take for granted. But not that long ago, storing more than a few megabytes — yes, megabytes, not gigabytes — required a HDD. This was clunky solution, particularly as files started to get larger. Manufacturers like iOmega tried innovative technology like the Zip Drive. At the time, getting 750 megabytes of storage on a floppy disk was as impressive as, well, the technology we’re about to talk about.
+
+But then came flash memory. Using quantum technology, we can now store tens of gigabytes on a small SD card. In itself, this has been a huge advance, as anyone with a digital camera will gladly tell you. Being able to snap pictures all day without worrying about silly things like memory is very convenient.
+
+Nowadays, some manufacturers have taken SD card technology a step further. They’ve begun to include WiFi technology in their cards. For many devices, this is unnecessary. For example, modern smartphones invariably support WiFi technology. But many cameras don’t, and adding this capability can allow you to take advantage of additional features.
+
+Since WiFi SD cards have started to become popular, we’ve done our own reviews. Most recently, back in January, we updated this article. But even in these few short months, manufacturers have been adding new features. Today, we’re going to take a look at two WiFi SD cards that have been upgraded since our last review.
+
+EZ-Share-wifi-sd-card
+When Can I Use a WiFi SD Card?
+
+One important thing to keep in mind is that we’re talking about SD cards, not Micro SD cards. While full-sized SD cards can use WiFi technology, it’s not yet available on Micro SD cards. This is an important distinction, since many SD-enabled devices actually use Micro SD. That said, depending on your device, all hope is not lost.
+
+For larger devices, one option is to use a USB WiFi adapter. These are a bit clunky to use with your cell phone or camera, but they can get your old laptop connected in a jiffy. And they don’t occupy an SD card slot. So if you’re actually using your SD card for transferring data, you won’t have to worry about losing connectivity while you’re swapping your card.
+
+Another problem many people face is that it’s impossible to use their wireless device on the road. If portability is your biggest concern, consider a car WiFi system. These systems allow you to connect to the internet any time you’re in range of your car. They may not work for everybody, but if your job requires you to drive a lot, they’re a solid choice.
+
+Now that we’ve looked at some alternative options, it’s time to get into the meat of our review. Let’s take a look at the Toshiba FlashAir and the ez Share. We’ve reviewed earlier versions of both of these offerings. But in that time, a lot has changed, and there are several new features, including enhanced memory capacity. Now, we’re going to take a deep dive into their features, benefits, and drawbacks. Let’s get ready to rumble!
+
+Toshiba FlashAir
+Toshiba FlashAir
+
+The Toshiba FlashAir is an SD card with a maximum 64GB capacity. It weighs only 2 grams, and at first glance it looks like only a regular SD card. And, in a sense, it is. Even if you have no WiFi needs, you can still use the FlashAir to store your data. With a write speed of 70 MB/s and a write speed of 90 MB/s, it’s certainly no slouch. That said, there are plenty of SD cards on the market that offer fast read/write times. Far more important for our purposes is how the FlashAir performs on a wireless connection. Let’s take a closer look at what it’s capable of.
+
+To begin with, the FlashAir is advertised as a plug-and-play solution. And, to be fair, it comes pre-formatted in exFAT format, which is compatible with both Windows and iOS. In this sense, it’s truly plug-and-play. Insert it in a Windows, iOS, or Android device, and you’ll instantly be able to use it for data storage. That said, additional steps are necessary if you’re trying to use the FlashAir for its intended purpose. To activate the WiFi, you’ll have to utilize the FlashAir app to get the FlashAir to pair with your device.
+
+The FlashAir app is available on both iOS and Android. To install it, you simply need to download it for free from Google Play or the Apple Store. From there, if you want to use the FlashAir as a wireless adapter, you’ll need to have the app loaded. You can still use the FlashAir for storage without the app running, but it won’t connect to the internet. That said, there are several other advantages to running to the app.
+
+Toshiba FlashAir
+
+These go above and beyond the value of using the FlashAir for WiFi. As a result, it’s a good idea to install the app, whether or not you actually need the wireless connection. That said, there’s really no reason to use the FlashAir as a standard SD card. So the app is basically part of the package if you want full functionality.
+
+One useful function of the FlashAir app is that it can be installed on multiple devices simultaneously. This is the case even for devices that don’t utilize the FlashAir SD card. The app allows you to automatically share photos, instantly, in real time. What this means is that if you snap a picture on a device with the FlashAir installed, the photo can be viewed instantly on your other devices. All in all, you can install the FlashAir app on seven different devices. So sharing photos with family will be easier and more painless than ever.
+
+Toshiba FlashAir
+
+The FlashAir is compatible with multiple browsers, including Internet Explorer, Safari, and Google Chrome. As a result, it’s a solid choice for just about any device. That said, check with your manufacturer to make sure you’re running the correct browser. Depending on your exact device, using the wrong browser can result in some finicky behavior. Pass-thru mode sounds fancy, but it’s just another way of saying you can use your FlashAir as an SD card and a WiFi card at the same time. This means you can continue to snap pictures even as you share them. And your connection won’t drop or lag just because you’re reading or writing.
+
+The FlashAir also supports “Eyefi Connected” mode. This is yet another simple feature with a fancy name. What is means is that it will prevent your camera from powering off while you’re on a wireless connection. So you don’t have to worry about your camera automatically powering down while you’re in the middle of uploading. The FlashAir also comes with an impressive 5-year manufacturer’s warranty. It covers all errors in parts and workmanship. Be aware, though, that it does not cover accidental damage or abuse.
+
+ez Share
+ez Share
+
+While Toshiba is a well-known, established brand, ez Share is somewhat less well-known. This brand is owned by LZEAL Information Technology Company, a Chinese computer parts firm. But despite being made in China, there’s still plenty to like. The first thing you’ll notice is the unique orange color of their SD cards, as opposed to the standard black. This is a throwback to EYE-Fi, the original WiFi SD card manufacturer, and it’s a worthwhile tribute. But color and design don’t tell us much about overall quality. To determine that, we need to look under the hood and see what the ez Share is actually capable of.
+
+In terms of raw storage, the ez Share comes in several sizes. In addition to the base 16GB version, there are also 32, 64, and 128GB versions available. While this might not be as impressive as some newer, 256GB SD cards, it’s important to keep things in perspective. WiFi SD technology is a marvel, but it’s not a miracle. The WiFi hardware needs to fit somewhere, and this limits how much space can be dedicated for storage. Still, 128GB is a lot of space, and many amateur photographers make do with a 64 or even 32GB card.
+
+ez Share
+
+Read speeds come in at about 19 MB/s and writing clocks in at about 10 MB/s. This is fairly slow for a modern SD card, but it’s still – barely – fast enough to maintain a designation as a Class 10 storage device. Nonetheless, this is an important metric. A Class 10 storage device is capable of recording 1080p video, while lower classes are not. By meeting this threshold, the ez Share ensures that it will remain relevant for all your recording needs.
+
+The free ez Share app is available on Android, iOS, and Windows. This means it’s capable of working on just about any device on the market. And that’s fortunate, since you won’t be able to get the most out of your ez Share without the app. Once it’s installed, you’ll be able to access several worthwhile features, in addition to basic WiFi. You’ll be able to edit your photos directly on your device. And you’ll have far more options than you’d get from a standard cell phone or camera photo app.
+
+When properly configured, the app allows you to share photos between up to 5 different devices. Sure, you could use this app to share photos between two or three of your own devices, but why not get creative? You can also use it to share photos between family members. Alternatively, you can use it to share photos between members of a group. For instance, if you’re birdwatching, you and a friend can instantly share photos without the need for any extraneous apps. Much like the FlashAir, the ez Share is compatible with a wide variety of devices. Whether you’re running iOS, Android, or Windows, your device is compatible.
+
+ez Share
+
+By default, the ez Share is always on. However, there’s a physical on/off switch, which can be used to disable the WiFi when battery life is a concern. You can also turn push notifications off if you desire. This won’t deactivate your ez Share WiFi hotspot. That said, it will keep your phone from pinging every time you take a photo.
+
+Also, there’s one thing you should be aware of regarding the connection. The ez Share will only sync with your phone or other devices if they’re connected directly through the on-board WiFi. This may be a concern if you prefer to use your phone’s data connection for other things. For example, social media, MMS messaging, and other basic features will suddenly depend on your ez Share’s connection.
+Final Verdict
+
+So, which WiFi SD card is the best? At first glance, it’s tough to make a decision. There’s only so much one of these products can do to differentiate themselves. And they’re both very well designed, so we’re basically counting angels dancing on the head of a pin. Still, there are a couple of differences that are well worth considering.
+
+To begin with the FlashAir’s app has an edge, but only by a hair. While the ez Share can connect to 5 devices simultaneously, the FlashAir WiFi SD Card can connect to 7. Their app is also more intuitive and easy to use. That said, “intuitive” is a subjective term. Suffice it to say that for most people, the FlashAir app will have an easier learning curve. But either way, the apps are more or less equivalent, especially in terms of functionality.
+
+However, the ez Share WiFi SD Card wins out on capacity. While the FlashAir is limited to 64GB, the ez Share is available with up to 128GB of space. Obviously, this depends on which size you decide to buy. Still, if you’re a serious photo bug who needs lots of memory, the ez Share is a better choice.
+
+
+
+17 Comments
+
+    vegazosten
+
+    Hello, can you use a wifi sdcard in a smartphone without problems?
+    I want to connect without the usual usbwire between computer and smartphone.
+    Would this be a good idea? TNX Jose
+    Reply
+        Tobin Roe Sr
+
+        Not unless your smart phone accepts a full size SD card.
+        Why not just sync your smart phone pics with a cloud service, then set your computer up to access the same service? (Note: This configuration MAY consume large amounts of cellular data depending on your data plan….)
+        Reply
+    Catherine
+
+    Hello,
+
+    First of all I feel like I’ve been living under a rock!! Seriously wifi SD cards WOW! I have a Nikon D90 and a Sony RX100M2 … I use the Sony for scuba in a housing with the a strobe. The pics are awesome!
+
+    My question is which one of these cards would be best for both my cameras? I’m trying to DIY a photo booth for a 50th birthday party and I want to be able to use one of my cameras with my ipad!
+
+    Thanks in advance for your help
+
+    Catherine
+    Reply
+        rafi Ahmed
+
+        https://youtu.be/r3fJVI1i0a4
+        Bit too late a reply
+        Reply
+    Erin
+
+    Thanks so much for the review! Have you seen the Toshiba FlashAir 4th Generation’s in 64GB recently? I’m in the market (for christmas wish list) for one and want the 64GB version but can’t find it. Thanks!
+    Reply
+    Rosco
+
+    Hi great review,
+
+    Before pulling the trigger on one of these or perhaps one not mentioned, could you possibly revisit this from the point of view of best phone app?
+
+    I have a Nikon d7000 set to shoot raw and jpeg. Raw for serious editing but ideally my 2nd card slot would be a wifi SD for jpegs only. Ready for quick transfer to phone and then onto some social media app.
+
+    After a quick look on the iOS App Store: transcend, toshiba and eyefi apps all have poor ratings and reviews.
+
+    I can’t help but think that these wifi cards all fall flat of the main purpose if the app design/support is lacking.
+
+    Cheers,
+    Rosco
+    Reply
+    Thomas Riis
+
+    Hi.
+
+    Can you use any of the Wifi SD cards to store .txt files or .csv files, instead of Photo files?
+
+    Thanks and best regards
+    Thomas R
+    Reply
+    Riggzie
+
+    Thanks.. I needed this. I have been using an Eye-Fi mobi 32gb (orange) card for a few years. Love it.. Been telling people about it. the other day I googled the eye-fi and saw it selling on amazon for $449!!!!! I was lost. I paid $60. so I started looking and still no idea why.
+    anyway… I just ejected my card out the other day. My Canon 7d mark ii shot it out and it fell on the floor. The 2 halves separated enough and the slide lock came out. Well now the card still works but is stuck in locked mode.. ughhh
+
+    so I’m out looking for a replacement. I am not concerned with anything above 32gb but now I think I will go for the Toshiba and price them… maybe the 64gb if not too bad.
+
+    thanks again!
+
+    these cards are awesome. I was taking pics at an MMA belt testing and I use my CF for raw and the SD for 1080 jpg for quick checkins into facebook and someone I know that was there taking pics was like… how are you adding pics? your still here!!!! hah..
+    Reply
+    Justin
+
+    Thank you for the review. Do you know of an option with cellular data rather than Wifi or an SD card that holds a sim card? I want a lot more range than wifi provides work with others in remote locations.
+    Reply
+    Michael
+
+    Hi I use to have eye-fi card which used to transfer both pictures and video from my Nikon d-90 to my computer (not laptop) , now from any reason it’s not working any more , which we card should be best suite for me to do that work ( not transfer to mobile but do to a computer without wi fi connection, that con to the the net by net cable , and I have wi fi at my place)
+    Reply
+    Pat
+
+    I just want to know if the Toshiba Flashair will work with my Nikon D5000. Can anyone tell me for certain that it will?
+    Reply
+    VS
+
+    Can you connect the cards to a router like EYE-Fi so you can use multiple cards at one to one device?
+    Reply
+    SteveS
+
+    All of these cards miss the mark. None has replaced the now defunct Eye-FI capability of having the card connect as client on a WiFi network. The Eye FI PC app allowed seamless automatic transfer to our local NAS as well as photo sharing sites, without cluttering the devices local storage.
+    Today to do that we need to dedicate a smartphone, which has huge storage limitations, and depend on the whim of several unrelated apps to interact in a reliable manner (they don’t) to transfer the files in a timely manner. Finally we need to remove the unwanted photos from the phone manually.
+
+    Since Eye-Fi shut down, technology has gone backwards in the face of mobile infatuation.
+
+    Anyone know if there’s a open or semi open WiFi SDcard out there? We’re ready to hack our own solution.
+    Reply
+    Robin Courtney
+
+    Does this put the expensive wireless transmitters out of business?
+    Reply
+    Pete
+
+    Do you know if the Toshiba FlashAir is being discontinued? I can see on their website the Developers site has been taken down! 🙁
+    Reply
+    Sandor
+
+    Like Michael, I am looking for a replacement for our Eye-Fi cards that will transfer directly to our server (at work).
+
+    We currently use 4 Eye-Fi cards & the transfer utility is installed on our OS X server.
+    Basically it works like a wireless tether. Using iOS or “the cloud” would not work.
+    Reply
+    Peter
+
+    All very well, but unfortunately FlashAir no longer works with the latest version of iOS basically rendering it useless.
+    This was such a great product, and so useful I find it almost impossible to comprehend that Toshiba have just abandoned the sector of the market that uses Apple products.
+    I’m going to ask for a refund for the cost of my card:
+
+
+MSGENDODOC
+
+Hi everyone,
+
+Not sure what the reviewers were thinking writing this article in August 2019, but the Eye-Fi and Toshiba products have both been discontinued well before August 2019.  This is presumably as most serious cameras now on the market have WiFi built in, so the commercial need for a WiFi SD card has reduced.  
+
+I have an Olympus OM-D E-M10.  I need to use Windows at work to shoot images of clients, when I am too busy to take out the SD card and load the images onto the PC. Therefore I really valued the Eye-fi card as it sensed when new images were taken and then signaled to the PC to change wireless networks to the Eye-Fi card, automatically download the images to PC and then revert the computers WiFi connection back to my work router.  Brilliant - until Eye-fi stopped supporting the software and went out of business.  I couldn't get a new Toshiba card to work at all.  
+
+Luckily my E-M10 has built in WiFi and can be connected to the Oishare olympus app in iOS or Android but I could not find a Windows version.  I have therefore hacked the camera WiFi signal and found a way to read and download images from the camera to PC using some in house software I wrote, as I do some coding.  I have open sourced this and it can be downloaded from  https://github.com/MSGEndo/OLYMPUSWIFI  As I'm an older coder, then it's written in Object Pascal in the Lazarus IDE (www.lazarus-ide.org), a free open source coding language, so no cost to the user.  Please feel free to use this software and even modify and improve it if it is useful to you and others.  I have not been able to automatically swap my PC WiFi connection to and from the camera, so do need to manually change WiFi connections on the PC to link with the camera, but I can live with this.  
+
+Hope this is helpful to olympus camera / PC users
+
+Martin    
