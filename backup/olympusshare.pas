@@ -114,7 +114,7 @@ private
 
  Procedure   Initialize;
  Procedure   CleanUp;
- Function    FindDownloadRecord: integer;
+ Function    FindDownloadRecord(FindThis: String): integer;
  Function    GetOSVersion: String;
  Function    GetDCIMResponseSL(AHTTPRequest: String; AResponseFilename: String): TStringlist;     // Returns a TStringlist
  Function    GetDCIMResponseMS(AHTTPRequest: String; AResponseFilename: String): TMemoryStream;   // Returns a TMemoryStream
@@ -130,6 +130,8 @@ public
  Destructor  Destroy; override;
  Procedure   RegisterAllSDCardFilesAsDownloaded;
  Procedure   RememberDownloadDir;
+ Procedure   RememberServerAddr;
+ Procedure   RememberSDRootDir;
  Function    CountFilesForDownload: integer;
  Function    DCIMListToStringList(ADCIMList: TDCIMList; AListTypes: ListTypes): TStringList;
  Procedure   GetSDCardData;
@@ -198,8 +200,9 @@ begin   // THis uses TfpHTTPClient to get from the server either a TStringlist o
         // will be saved to this given directory
 
  If (FHTTPClient  <> nil)                      and
-    (FHTTPRequest <> '')                       and
-    (FHTTPRequest.Contains('http://oishare'))  then  // Usually 'http://oishare' for olympus cameras
+    (FHTTPRequest <> '')                       then
+//    (FHTTPRequest.Contains('http://oishare')) then     // Usually 'http://oishare' for olympus cameras
+                                                         // can't expect this as some cameras emit an IP address e.g. 192.168.1.10
  Try
    If FOutputSort = oStrList then FHTTPClient.SimpleGet(FHTTPRequest, FHTTPResponseSL) else
    If FOutputSort = oMStream then FHTTPClient.SimpleGet(FHTTPRequest, FHTTPResponseMS);
@@ -296,11 +299,24 @@ begin
   Except;
     FDownloadedList := TStringList.create;
   end;
-    a := FindDownloadRecord;
+    // Load the previous run's PC's download directory
+    a := FindDownloadRecord('DownloadDir='); // if no string found then -1
     If (a > -1) and (length(FDownloadedList.strings[a]) > 12) then // i.e. 'DownloadDir='
     FDownLoadDir := Copy(FDownloadedList.strings[a],13,length(FDownloadedList.strings[a])-12) else
     FDownloadDir := GetCurrentDir;
     If not DirectoryExists(FDownLoadDir) then FDownloadDir := GetCurrentDir;
+
+    // Load the previous run's camera's server address
+    a := FindDownloadRecord('CameraURL='); // if no string found then -1
+    If (a > -1) and (length(FDownloadedList.strings[a]) > 10) then // i.e. 'CameraURL='
+    FServerAddr := Copy(FDownloadedList.strings[a],11,length(FDownloadedList.strings[a])-10) else
+    FServerAddr := 'http://oishare';
+
+    // Load the previous run's camera's root dir
+    a := FindDownloadRecord('CameraROOTDir='); // if no string found then -1
+    If (a > -1) and (length(FDownloadedList.strings[a]) > 14) then // i.e. 'CameraROOTDir='
+    FDCIMDir := Copy(FDownloadedList.strings[a],15,length(FDownloadedList.strings[a])-14) else
+    FDCIMDir := '/DCIM';
 end;
 
 procedure TOIShareReader.CleanUp;        // Organises the final program state
@@ -311,6 +327,9 @@ begin
   For a := 0 to length(FImageLists) -1 do
   SetLength(FImageLists[a],0);
   SetLength(FImageLists,0);
+  RememberDownloadDir;
+  RememberServerAddr;
+  RememberSDRootDir;
   FDownloadedList.SaveToFile(GetCurrentDir + '\OlympusCameraDownloadRecord.txt');
   FreeAndNil(FDownloadedList);
   FreeAndNil(ErrorList);
@@ -338,6 +357,8 @@ begin;         // which have not been downloaded by this program, and you do not
     end;
   end;
   RememberDownloadDir;
+  RememberServerAddr;
+  RememberSDRootDir;
   {$IFDEF WINDOWS}
   Try FDownloadedList.SaveToFile(GetCurrentDir + '\OlympusCameraDownloadRecord.txt');
   except
@@ -371,9 +392,9 @@ begin;
 end;
 
 
-Function TOIShareReader.FindDownloadRecord: integer;
-var  // Identifies where the download directory record is in the OlympusCameraDownloadRecord.txt file
-  a, Found: integer;        // All this so I dont use TIniFile which is not available on Linux!
+Function TOIShareReader.FindDownloadRecord(FindThis: String): integer;
+var                  // Identifies where the download directory record is in the OlympusCameraDownloadRecord.txt file
+  a, Found: integer; // All this so I dont use TIniFile which is not available on Linux, Mac!
 begin
   Found  := -1;
   If (FDownloadedList <> nil)    and
@@ -382,11 +403,11 @@ begin
     a     := 0;
     Found := -1;
     Repeat
-      If FDownloadedList[a].contains('DownloadDir=') then
+      If FDownloadedList[a].contains(FindThis) then
       Found := a;
       inc(a);
     until (Found > -1)                or
-          (a >= FDownloadedList.Count -1);
+          (a > FDownloadedList.Count -1);
   end;
   Result := Found;
 end;
@@ -520,10 +541,34 @@ procedure TOIShareReader.RememberDownloadDir;    // Update the saved download di
 var
   a: integer;
 begin
-  a := FindDownloadRecord;
+  a := FindDownloadRecord('DownloadDir=');
   If a > -1 then
   FDownloadedList[a] :=    'DownloadDir=' + FDownloadDir  else
   FDownloadedList.Insert(0,'DownloadDir=' + FDownloadDir);
+end;
+
+procedure TOIShareReader.RememberServerAddr;    // Update the saved download directory to file too
+var
+  a: integer;
+begin
+  a := FindDownloadRecord('CameraROOTDir=');
+  If a > -1 then
+  FDownloadedList[a] :=    'CameraROOTDir=' + FDCIMDir  else
+  If FDownloadedList.count > 1 then
+  FDownloadedList.Insert(1,'CameraROOTDir=' + FDCIMDir) else
+  FDownloadedList.add('CameraROOTDir=' + FDCIMDir);
+end;
+
+procedure TOIShareReader.RememberSDRootDir;    // Update the saved download directory to file too
+var
+  a: integer;
+begin
+  a := FindDownloadRecord('CameraURL=');
+  If a > -1 then
+  FDownloadedList[a] :=   'CameraURL=' + FServerAddr  else
+  If FDownloadedList.count > 1 then
+  FDownloadedList.Insert(1,'CameraURL=' + FServerAddr) else
+  FDownloadedList.add('CameraURL=' + FServerAddr);
 end;
 
 function TOIShareReader.GetDCIMDirList(AServerURL: String): TDCIMList; // Queries the server for a list of directories on the SD card
@@ -542,8 +587,11 @@ var
   AHTTPResponse: TStringList;
 begin
   Setlength(Result,0);
-  If (length(ADir) > 0) then
+  If (length(FDCIMDir) > 0) and
+     (length(ADir)     > 0) then
   begin;
+    If not (FDCIMDir[1] ='/') then
+    insert('/',FDCIMDir,1); // Adds a prefix '/' if not present already in ADir FServerAddr + FDCIMDir
     If not (ADir[1] ='/') then
     insert('/',ADir,1); // Adds a prefix '/' if not present already in ADir FServerAddr + FDCIMDir
     AHTTPResponse := GetDCIMResponseSL(FServerAddr + FDCIMDir + ADir,'');  //'http://oishare/DCIM' + /directory
@@ -551,7 +599,7 @@ begin
     //FImageList    := GetDCIMList(AHTTPResponse);  // Do we want/need this to happen
     FreeAndNil(AHTTPResponse);
   end else
-  ErrorList.add('Sorry: No image directory name was given to read' + ' [' + DateTimeToStr(Now,False) + ']'); ;
+  ErrorList.add('Sorry: No SD card root directory or image directory name was given to read' + ' [' + DateTimeToStr(Now,False) + ']'); ;
 end;
 
 function TOIShareReader.DCIMListToStringList(ADCIMList: TDCIMList; AListTypes: ListTypes): TStringList;
@@ -584,8 +632,8 @@ var
   a: integer;
 begin;
   //clear all previous lists to avoid memory leaks
-  SetLength(FDirList,0);
   IsDownloading := true;
+  SetLength(FDirList,0);
   For a := 0 to length(FImageLists) -1 do
   SetLength(FImageLists[a],0);
   SetLength(FImageLists,0);
@@ -599,7 +647,7 @@ begin;
     begin;
       FImageLists[a] := GetDCIMImageList(FDirList[a].AFileName); // Gets each image directory's file list for display
     end
- end;
+  end;
  IsDownloading := false;
 end;
 
@@ -668,6 +716,9 @@ begin
    end else
   ErrorList.add('Sorry: Could not find or create the download directory: ' + SaveImageDir + ' [' + DateTimeToStr(Now,False) + ']');
   RememberDownloadDir;
+  RememberServerAddr;
+  RememberSDRootDir;
+
   {$IFDEF WINDOWS}
   Try FDownloadedList.SaveToFile(GetCurrentDir + '\OlympusCameraDownloadRecord.txt');
   except
@@ -692,10 +743,20 @@ begin;
     ts1 := ts1.Replace('$!?','    ',[rfReplaceAll]);        // NB need to free this TStringlist externally - don't forget
     Result := TStringlist.create;
     Result.text := ts1;
-    a := FindDownloadRecord;
+
+    a := FindDownloadRecord('DownloadDir=');
     If a > -1 then
     Result[a] := 'RECORD OF DOWNLOADED FILES';             // Removes the DownloadDir string in the TStringlist from user view
-    end;                                                   // but maintains that string in the TStringlist so count on delete lines is OK
+                                                           // but maintains that string in the TStringlist so count on delete lines is OK
+    a := FindDownloadRecord('CameraROOTDir=');
+    If a > -1 then
+    Result[a] := '----';                                   // Removes the CameraROOTDir= string in the TStringlist from user view
+                                                           // but maintains that string in the TStringlist so count on delete lines is OK
+    a := FindDownloadRecord('CameraURL=');
+    If a > -1 then
+    Result[a] := '----';                                   // Removes the CameraROOTDir= string in the TStringlist from user view
+                                                           // but maintains that string in the TStringlist so count on delete lines is OK
+    end;
   end;
 
 

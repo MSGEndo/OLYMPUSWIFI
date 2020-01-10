@@ -30,11 +30,16 @@ type
     CLBox_SDImages: TCheckListBox;
     CLBox_SDDir: TCheckListBox;
     DirEdit_Images: TDirectoryEdit;
+    Edit_RootDir: TEdit;
     Edit_ServerAddr: TEdit;
     Image_Banner: TImage;
     ImageView: TTIImage;
     Label1: TLabel;
+    Label4: TLabel;
+    Label_Plus: TLabel;
+    Label_URL: TLabel;
     Label5: TLabel;
+    Label_CameraURL: TLabel;
     Label_CB_DLHx: TLabel;
     Label_Transfer: TLabel;
     Label11: TLabel;
@@ -50,7 +55,7 @@ type
     Label_UseTimeSet2: TLabel;
     Memo1: TMemo;
     Memo_Errors: TMemo;
-    PageControl1: TPageControl;
+    PageControl_Main: TPageControl;
     Panel1: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
@@ -70,7 +75,9 @@ type
     UpDown_TimeSet: TUpDown;
 
     //procedure Button1Click(Sender: TObject);  // original proof of concept
+    procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    Procedure UpdateLabelServerURL;
     procedure Btn_CancelDLClick(Sender: TObject);
     procedure Btn_MarkAllDLedClick(Sender: TObject);
     procedure Btn_Refresh1Click(Sender: TObject);
@@ -111,13 +118,15 @@ implementation
 procedure TForm_Main.FormCreate(Sender: TObject);
 begin
   OiLink                   := TOiShareReader.create;
-  Edit_ServerAddr.text     := 'http://oishare';
-  OiLink.ServerAddr        := Edit_ServerAddr.text;
+  // Edit_ServerAddr.text     := 'http://oishare';
+  // Edit_RootDir.Text        := /DCIM
+  Edit_ServerAddr.text     := OiLink.ServerAddr;
+  Edit_RootDir.Text        := OiLink.DCIMDir;
+  Label_CameraURL.caption := Edit_ServerAddr.text + '/' + Edit_RootDir.text;
   DirEdit_Images.Text      := OiLink.DownloadDir;
   DirEdit_Images.Directory := DirEdit_Images.Text;
   ShListView_Files.Root    := DirEdit_Images.Text;
   UpdateDLoadList;
-
   Timer_Transfer.interval := UpDown_TimeSet.Position;
   Timer_Transfer.Enabled := ChBox_Timer.Checked;
   If ChBox_Timer.Checked then
@@ -129,6 +138,21 @@ begin
     Label_Transfer.caption  := 'Transfer Files Now';
     Timer_Transfer.enabled := false;
   end;
+end;
+
+Procedure TForm_Main.UpdateLabelServerURL;
+begin;
+    OiLink.ServerAddr := Edit_ServerAddr.text;
+    If Edit_RootDir.text <> '' then
+    If Edit_RootDir.text[1] <> '/' then
+    Edit_RootDir.text := '/' + Edit_RootDir.text;
+    Oilink.DCIMDir    := Edit_RootDir.text;
+    Label_CameraURL.caption := Edit_ServerAddr.text + Edit_RootDir.text;
+end;
+
+procedure TForm_Main.Button1Click(Sender: TObject);
+begin
+  PageControl_Main.ActivePageIndex := 2;
 end;
 
 Procedure TForm_Main.UpdateDLoadList;
@@ -169,12 +193,13 @@ var
   a,b: integer;
 begin
   a := 0;  b := -1;
-  If CLBox_SDDir.Count > 0 then
+  If (CLBox_SDDir.Count > 0)            and
+     (CLBox_SDDir.Items[0] <> 'No Data')then
   Repeat
     If CLBox_SDDir.Selected[a] then b := a;
     inc(a);
   until b > -1;
-  DisplaySDCardFiles(b);
+  If b > -1 then DisplaySDCardFiles(b);
 end;
 
 
@@ -243,11 +268,12 @@ procedure TForm_Main.Btn_DeleteDLHxFilesClick(Sender: TObject); // Deletes recor
 var                                                             // This means that if the file is found again on the SD card then it will be downloaded again
   a: integer;
 begin
- a := 0;
+ a := 2; // Start t 2 so dont delete the dolloaddir, camera server or camera root dir records
+ If ChLBox_DLHx.Count > 2 then;
  Repeat
    If (ChLBox_DLHx.Checked[a]) then
    begin
-     If a > 0 then // so dont delete DownloadDir record, expected to be string [0]
+     If a > 2 then // so dont delete DownloadDir record, expected to be string [0]
      begin;
        ChLBox_DLHx.items.Delete(a);
        OiLink.DownloadList.Delete(a);
@@ -270,6 +296,7 @@ begin;
      Screen.Cursor           := crHourglass;
      Label_Transfer.caption  := 'Transfering Files Now...';
      OiLink.ServerAddr       := Edit_ServerAddr.text; //http://oishare
+     OiLink.DCIMDir          := Edit_RootDir.text;
      OiLink.DownloadDir      := DirEdit_Images.Directory;
      OiLink.GetSDCardData;  // update SDcard directory and files listing
      DisplaySDCardFiles(length(OiLink.ImageLists)-1); // show the first directory and its files
@@ -325,6 +352,10 @@ begin;
      SL.Free;
    end else
    CLBox_SDImages.Items.text := 'No Data';
+ end else
+ begin;
+   CLBox_SDDir.Items.text := 'No Data';
+   CLBox_SDImages.Items.text := 'No Data';
  end;
 end;
 
@@ -346,7 +377,7 @@ end;
 
 procedure TForm_Main.Edit_ServerAddrExit(Sender: TObject);
 begin
-    OiLink.ServerAddr := Edit_ServerAddr.text;
+  UpdateLabelServerURL;
 end;
 
 procedure TForm_Main.FormClose(Sender: TObject; var CloseAction: TCloseAction);

@@ -1065,7 +1065,7 @@ object Form_Main: TForm_Main
           ClientWidth = 1213
           TabOrder = 0
           object Edit_ServerAddr: TEdit
-            Left = 49
+            Left = 48
             Height = 29
             Top = 54
             Width = 348
@@ -1078,8 +1078,8 @@ object Form_Main: TForm_Main
             Left = 48
             Height = 21
             Top = 24
-            Width = 338
-            Caption = 'Olympus Camera  Wireless Server Directory URL'
+            Width = 270
+            Caption = 'Olympus Camera  Wireless Server URL'
             Font.CharSet = ANSI_CHARSET
             Font.Color = clWhite
             Font.Height = -16
@@ -1118,6 +1118,39 @@ object Form_Main: TForm_Main
             ParentColor = True
             TabOrder = 1
           end
+          object Label4: TLabel
+            Left = 441
+            Height = 21
+            Top = 24
+            Width = 162
+            Caption = 'SD Card Root Directory'
+            ParentColor = False
+          end
+          object Edit_RootDir: TEdit
+            Left = 442
+            Height = 29
+            Top = 54
+            Width = 160
+            OnExit = Edit_ServerAddrExit
+            ParentColor = True
+            TabOrder = 2
+            Text = '/DCIM'
+          end
+          object Label_Plus: TLabel
+            Left = 411
+            Height = 37
+            Top = 48
+            Width = 18
+            Caption = '+'
+            Font.CharSet = ANSI_CHARSET
+            Font.Color = clWhite
+            Font.Height = -27
+            Font.Name = 'Segoe UI'
+            Font.Pitch = fpVariable
+            Font.Quality = fqDraft
+            ParentColor = False
+            ParentFont = False
+          end
         end
         object Panel_DownloadHxTitle1: TPanel
           Left = 0
@@ -1131,6 +1164,22 @@ object Form_Main: TForm_Main
           TabOrder = 1
         end
       end
+    end
+    object Label_URL: TLabel
+      Left = 483
+      Height = 21
+      Top = 4
+      Width = 94
+      Caption = 'Camera URL :'
+      ParentColor = False
+    end
+    object Label_CameraURL: TLabel
+      Left = 592
+      Height = 21
+      Top = 4
+      Width = 94
+      Caption = 'http://oishare'
+      ParentColor = False
     end
   end
   object Timer_Transfer: TTimer

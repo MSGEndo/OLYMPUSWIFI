@@ -1,1 +1,3 @@
 DownloadDir=C:\MG\MGSoftware\Lazarus\OLYMPUSWIFI
+CameraURL=http://oishare
+CameraROOTDir=/DCIM
