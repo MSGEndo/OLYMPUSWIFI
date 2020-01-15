@@ -35,8 +35,9 @@ object Form_Main: TForm_Main
       Width = 75
       Anchors = [akTop, akRight]
       Caption = 'Help'
+      Color = clSilver
       Font.CharSet = ANSI_CHARSET
-      Font.Color = clWhite
+      Font.Color = clBlack
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Pitch = fpVariable
@@ -696,7 +697,15 @@ object Form_Main: TForm_Main
               Top = 5
               Width = 75
               Caption = 'Refresh'
+              Color = clSilver
+              Font.CharSet = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -16
+              Font.Name = 'Segoe UI'
+              Font.Pitch = fpVariable
+              Font.Quality = fqDraft
               OnClick = Btn_RefreshSDClick
+              ParentFont = False
               TabOrder = 2
             end
             object CB_SDFiles: TCheckBox
@@ -731,6 +740,7 @@ object Form_Main: TForm_Main
               Top = 172
               Width = 24
               Caption = '[..]'
+              Color = clSilver
               OnClick = Btn_MarkAllDLedClick
               TabOrder = 4
             end
@@ -763,6 +773,7 @@ object Form_Main: TForm_Main
               ReadOnly = True
               RowSelect = True
               TabOrder = 0
+              OnSelectItem = ShListView_FilesSelectItem
               ObjectTypes = [otNonFolders]
             end
             object Label2: TLabel
@@ -817,7 +828,15 @@ object Form_Main: TForm_Main
               Top = 5
               Width = 75
               Caption = 'Refresh'
+              Color = clSilver
+              Font.CharSet = ANSI_CHARSET
+              Font.Color = clBlack
+              Font.Height = -16
+              Font.Name = 'Segoe UI'
+              Font.Pitch = fpVariable
+              Font.Quality = fqDraft
               OnClick = Btn_Refresh1Click
+              ParentFont = False
               TabOrder = 2
             end
           end
@@ -838,6 +857,7 @@ object Form_Main: TForm_Main
             ParentColor = False
             ParentFont = False
             WordWrap = True
+            OnClick = Arrow_TransferClick
           end
           object Label11: TLabel
             Left = 24
@@ -939,7 +959,7 @@ object Form_Main: TForm_Main
             ParentColor = False
             ParentFont = False
           end
-          object Label_UseTimeSet2: TLabel
+          object Label_LastDLImage: TLabel
             Left = 505
             Height = 21
             Top = 460
@@ -979,7 +999,15 @@ object Form_Main: TForm_Main
             Top = 424
             Width = 75
             Caption = 'Cancel'
+            Color = clSilver
+            Font.CharSet = ANSI_CHARSET
+            Font.Color = clBlack
+            Font.Height = -16
+            Font.Name = 'Segoe UI'
+            Font.Pitch = fpVariable
+            Font.Quality = fqDraft
             OnClick = Btn_CancelDLClick
+            ParentFont = False
             TabOrder = 8
             Visible = False
           end
@@ -1030,11 +1058,20 @@ object Form_Main: TForm_Main
           object Btn_DeleteDLHxFiles: TButton
             Left = 984
             Height = 25
+            Hint = 'The program forgets it has  downloaded the selected images when their records here are deleted'
             Top = 13
             Width = 203
             Anchors = [akTop, akRight]
             Caption = 'Delete selected records'
+            Color = clSilver
+            Font.CharSet = ANSI_CHARSET
+            Font.Color = clBlack
+            Font.Height = -16
+            Font.Name = 'Segoe UI'
+            Font.Pitch = fpVariable
+            Font.Quality = fqDraft
             OnClick = Btn_DeleteDLHxFilesClick
+            ParentFont = False
             TabOrder = 1
           end
         end
@@ -1055,7 +1092,7 @@ object Form_Main: TForm_Main
         Caption = 'Settings   '
         ClientHeight = 768
         ClientWidth = 1213
-        object Panel5: TPanel
+        object Panel_Settings: TPanel
           Left = 0
           Height = 718
           Top = 50
@@ -1067,7 +1104,7 @@ object Form_Main: TForm_Main
           object Edit_ServerAddr: TEdit
             Left = 48
             Height = 29
-            Top = 54
+            Top = 158
             Width = 348
             OnExit = Edit_ServerAddrExit
             ParentColor = True
@@ -1077,7 +1114,7 @@ object Form_Main: TForm_Main
           object Label1: TLabel
             Left = 48
             Height = 21
-            Top = 24
+            Top = 128
             Width = 270
             Caption = 'Olympus Camera  Wireless Server URL'
             Font.CharSet = ANSI_CHARSET
@@ -1089,39 +1126,22 @@ object Form_Main: TForm_Main
             ParentColor = False
             ParentFont = False
           end
-          object Memo1: TMemo
+          object Memo_Settings: TMemo
             Left = 48
-            Height = 424
-            Top = 96
-            Width = 1056
+            Height = 440
+            Top = 233
+            Width = 1100
             Lines.Strings = (
-              ' How to use this program'
-              ''
-              '  1.  Take some photos on your Olympus camera'
-              '  2.  Use the Olympus camera menu to select Connection to Smartphone.  This starts the camera WiFi server.'
-              '  3.  Connect your computer to this WiFi signal in the usual way for your operating system'
-              '  4.  Run this OlympusWIFI program'
-              '  5.  Set the download directory as required ("Transfer Files to This Directory") where  from the will be transferred'
-              '  6.  Option 1: Press the grey triangle once and wait for images on the SD card to be transferred to your computer''s download directory'
-              '  7.  Option 2: Click the Repeat Timer checkbox and wait for the timer (e.g. 60s) to automate image transfers periodically.'
-              '  8.  Downloaded files will be remembered, so will not be downloaded again on later transfers.'
-              ''
-              '  Enjoy'
-              ''
-              '  Martin Gale ( 04/01/2020 Copyright.)'
-              '  mail@isendo.com.au'
-              '  This program is open source and can be used for commercial and non commercial purposes (MIT licence) so long as'
-              '  full acknowledgement is made of the author''s original contribution in any distribution of the derived work. The software is as is,'
-              '  and no warranty of suitability of purpose or efficacy and is given, and the authors accept no liability whatsoever for its use, consequences or'
-              '  effects.   If it is not suitable for your  purpose then do not use this software.  Otherwise, please make good use of it. '
+              'No Data'
             )
             ParentColor = True
+            ScrollBars = ssAutoBoth
             TabOrder = 1
           end
           object Label4: TLabel
             Left = 441
             Height = 21
-            Top = 24
+            Top = 128
             Width = 162
             Caption = 'SD Card Root Directory'
             ParentColor = False
@@ -1129,7 +1149,7 @@ object Form_Main: TForm_Main
           object Edit_RootDir: TEdit
             Left = 442
             Height = 29
-            Top = 54
+            Top = 158
             Width = 160
             OnExit = Edit_ServerAddrExit
             ParentColor = True
@@ -1139,7 +1159,7 @@ object Form_Main: TForm_Main
           object Label_Plus: TLabel
             Left = 411
             Height = 37
-            Top = 48
+            Top = 152
             Width = 18
             Caption = '+'
             Font.CharSet = ANSI_CHARSET
@@ -1151,8 +1171,109 @@ object Form_Main: TForm_Main
             ParentColor = False
             ParentFont = False
           end
+          object Btn_TestServer: TButton
+            Left = 900
+            Height = 36
+            Top = 192
+            Width = 248
+            Caption = 'Test Camera Connection'
+            Color = clSilver
+            Font.CharSet = ANSI_CHARSET
+            Font.Color = clBlack
+            Font.Height = -16
+            Font.Name = 'Segoe UI'
+            Font.Pitch = fpVariable
+            Font.Quality = fqDraft
+            OnClick = Btn_TestServerClick
+            ParentFont = False
+            TabOrder = 3
+          end
+          object Btn_SaveHTTP: TButton
+            Left = 900
+            Height = 25
+            Hint = 'Save and email to Martin for program improvement'
+            Top = 680
+            Width = 248
+            Caption = 'Save Camera HTTP Data To File'
+            Color = clSilver
+            Font.CharSet = ANSI_CHARSET
+            Font.Color = clBlack
+            Font.Height = -16
+            Font.Name = 'Segoe UI'
+            Font.Pitch = fpVariable
+            Font.Quality = fqDraft
+            OnClick = Btn_SaveHTTPClick
+            ParentFont = False
+            TabOrder = 4
+          end
+          object CB_CameraModels: TComboBox
+            Left = 48
+            Height = 29
+            Top = 72
+            Width = 504
+            AutoComplete = True
+            AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
+            AutoDropDown = True
+            AutoSelect = False
+            DropDownCount = 12
+            ItemHeight = 21
+            OnChange = CB_CameraModelsChange
+            ParentColor = True
+            TabOrder = 5
+            Text = 'CB_CameraModels'
+          end
+          object Label10: TLabel
+            Left = 48
+            Height = 21
+            Top = 40
+            Width = 194
+            Caption = 'Choose Your Camera Model'
+            ParentColor = False
+          end
+          object Label_CameraNotes: TLabel
+            Left = 568
+            Height = 21
+            Top = 77
+            Width = 536
+            AutoSize = False
+            Caption = 'Camera Comment'
+            ParentColor = False
+          end
+          object Label12: TLabel
+            Left = 48
+            Height = 21
+            Top = 204
+            Width = 195
+            Caption = 'Camera HTTP Response Text'
+            ParentColor = False
+          end
+          object Btn_AddModel: TButton
+            Left = 442
+            Height = 25
+            Top = 43
+            Width = 110
+            Caption = 'Add Model'
+            Color = clSilver
+            Font.CharSet = ANSI_CHARSET
+            Font.Color = clBlack
+            Font.Height = -16
+            Font.Name = 'Segoe UI'
+            Font.Pitch = fpVariable
+            Font.Quality = fqDraft
+            OnClick = Btn_AddModelClick
+            ParentFont = False
+            TabOrder = 6
+          end
+          object Label14: TLabel
+            Left = 320
+            Height = 21
+            Top = 645
+            Width = 522
+            Caption = 'Save and email to msgendodoc@gmail.com for program improvement --> '
+            ParentColor = False
+          end
         end
-        object Panel_DownloadHxTitle1: TPanel
+        object Panel_SettingsTitle: TPanel
           Left = 0
           Height = 50
           Top = 0
@@ -1162,6 +1283,96 @@ object Form_Main: TForm_Main
           Color = 5987163
           ParentColor = False
           TabOrder = 1
+        end
+      end
+      object TS_Help: TTabSheet
+        Caption = 'Help'
+        ClientHeight = 768
+        ClientWidth = 1213
+        object Panel_HelpTitle: TPanel
+          Left = 0
+          Height = 50
+          Top = 0
+          Width = 1213
+          Align = alTop
+          Caption = 'HELP '
+          Color = 5987163
+          ParentColor = False
+          TabOrder = 0
+        end
+        object Panel_Help: TPanel
+          Left = 0
+          Height = 718
+          Top = 50
+          Width = 1213
+          Align = alClient
+          ClientHeight = 718
+          ClientWidth = 1213
+          Color = 6316128
+          ParentColor = False
+          TabOrder = 1
+          object Memo_Help: TMemo
+            Left = 48
+            Height = 602
+            Top = 70
+            Width = 1100
+            Font.CharSet = ANSI_CHARSET
+            Font.Color = clWhite
+            Font.Height = -12
+            Font.Name = 'Courier New'
+            Font.Pitch = fpFixed
+            Font.Quality = fqDraft
+            Lines.Strings = (
+              '''HOW TO USE THIS PROGRAM '''
+              ''
+              '  1.   Take some photos on your Olympus camera'
+              '  2.   Use the Olympus camera menu to select Connection to Smartphone.  This starts the camera WiFi server. '
+              '  3.   Connect your computer to this WiFi signal in the usual way for your operating system '
+              '  4.   Run this OlympusWIFI program '
+              '  5.   App Settings (Page 3): i)   Select your model of camera.  If your model is not there then use the Add button to add it. '
+              '                              ii)  Ensure the "Olympus Camera Server URL" is set correctly. '
+              '                                   This is the same URL address minus the "/DCIM" you can type into a web browser to access your camera. '
+              '                                   Change the server URL if needed '
+              '                                   e.g. Model E-M10 Mark I URL = "http://oishare", Model E-M10 Mark III URL = "http://192.168.0.10"  '
+              '                              iii) Ensure the "SDCard Root Directory" is set correctly. This is usually "/DCIM".  Need the initial forward slash. '
+              '  6.                          iv)  Test your camera is connected with the "Test Camera Connection" button. '
+              '                                   If connected the text box below will fill with HTTP data from your camera. '
+              '                                   If not connected there will be no data. '
+              '                                   Save this HTTP data to file with the "Save Camera Data To File" button. This text file can be '
+              '                                   emailed to me at MSGEndoDoc@gmail.com so that I can improve the program. '
+              '  7.   App Transfer Images Page (Page 1)  '
+              '                              i)   Set the download directory ("Transfer Files to This Directory").  Camera images will end up here. '''
+              '                              ii)  Option 1: Press the grey triangle once to transfer images from camera to computer '
+              '                                   Option 2: Click the Repeat Timer checkbox and wait for the timer (e.g. 60s) to automate periodic image transfers. '
+              '  NOTE1:  Files downoaded will be remembered and not downloaded again on later transfers. '
+              '  NOTE2:  App Download History page (Page 2) lists all downloaded files. '
+              '          Deleted selected file records here will allow those images to be download again from the camera on later transfers.'
+              ''
+              '  Enjoy '
+              ''
+              '  Martin Gale ( 04/01/2020 Copyright.) '
+              '  msgendodoc@gmail.com.au '''
+              '  www.github.com/MSGENDO/OLYMPUSWIFI'
+              '  This program is open source and can be used for commercial and non commercial purposes (MIT licence) so long as'
+              '  full acknowledgement is made of the authors original contribution in any distribution of the derived work. The software is as is'
+              '  and absolutely no warranty of suitability of purpose or efficacy and is given, and the authors accept no liability whatsoever '
+              '  for its use, consequences or effects. If it is not suitable for your  purpose then do not use this software.  '
+              '  Otherwise, please make good use of it.'
+              '                '
+            )
+            ParentColor = True
+            ParentFont = False
+            ScrollBars = ssAutoBoth
+            TabOrder = 0
+          end
+          object Label6: TLabel
+            Left = 50
+            Height = 21
+            Top = 40
+            Width = 209
+            Caption = 'HOW TO USE THIS PROGRAM'
+            ParentColor = False
+          end
         end
       end
     end

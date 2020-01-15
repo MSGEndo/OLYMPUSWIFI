@@ -2,26 +2,16 @@ unit OlympusShare;
 { Summary: This unit allows the user to download images from a wireless enabled Olympus camera, leaving the originals on the SD card.
 
   OS:      Windows 10 and Ubuntu 18.04 both working well, Mac OS not tested
-  DevTool: Lazarus2.06/FPC3.04
-  Camera: Olympus OM-D E-M10
+  DevTool: Lazarus 2.06 / FPC3.04
+  Camera: Olympus OM-D E-M10 Mark I, Mark 3 tested working
   How it works: Main class TOiShareReader, inherted from a TfpHTTPClient component, manages connecion to the camera oer a wireless signal.
-                The TfpHTTPClient is an component which is not installed in Lazarus by default and needs to be installed with
-                Menu|Package!Install/Uninstall Packages.
+                The TfpHTTPClient is an component which is not installed in Lazarus by default and needs to be installed in the fpWeb library
+                using Menu|Package!Install/Uninstall Packages.
 
   Why develop this program?  Olympus makes Android and iOS apps (Oi.Share) to allow WiFi download of images from their camera but do
-  not have an app for PC, Mac or Linux desktops. So I have made this one to use.  Also the phone apps do not allow automated download on the fly like
-  the old EyeFi SD cards did, sadly now not manufactured anymore.
-
-  How to use  How to use this program
-
-  1.  Take some photos on your Olympus camera
-  2.  Use the Olympus camera menu to select Connection to Smartphone.  This starts the camera WiFi server.
-  3.  Connect your computer to this WiFi signal in the usual way for your operating system
-  4.  Run this OlympusWIFI program
-  5.  Set the download directory as required ("Transfer Files to This Directory") where  from the will be transferred
-  6.  Option 1: Press the grey triangle once and wait for images on the SD card to be transferred to your computer's download directory
-  7.  Option 2: Click the Repeat Timer checkbox and wait for the timer (e.g. 60s) to automate image transfers periodically.
-  8.  Downloaded files will be remembered, so will not be downloaded again on later transfers.
+  not have an app for PC, Mac or Linux desktops. While a web browser can be pointed at the camera URL, this is cumbersome, and automated
+  downloading of image files is not possible using a web interfacem, or using the mobile and tablet Oishare app.
+  Now that the previous EyeFi WiFi enabled SD cards are no longer maid, a WiFi connection for Windows, Linux and Mac is needed.
 
   Enjoy
 
@@ -32,10 +22,43 @@ unit OlympusShare;
   and no warranty of suitability of purpose or efficacy and is given, and the authors accept no liability whatsoever for its use, consequences or
   effects.   If it is not suitable for your  purpose then do not use this software.  Otherwise, please make good use of it.
 
-Notes:
-i)   A record of the downloaded file names and other details are recorded in a file ..OlympusCameraDownloadRecord.txt.  This is delimited with
-the string '$!?' and is queried with string.contains for previous entries on deciding if to download a file or not.
-ii) Having to switch WiFi signals on the computer to connect to the camera then back to the usually home router is a pain.  Need to automate this.
+  'HOW TO USE THIS PROGRAM  + #13 + #10 + // TODO: need different EOL for Linux/macOS
+
+     1.   Take some photos on your Olympus camera
+     2.   Use the Olympus camera menu to select Connection to Smartphone.  This starts the camera WiFi server.
+     3.   Connect your computer to this WiFi signal in the usual way for your operating system
+     4.   Run this OlympusWIFI program
+     5.   App Settings (Page 3): i)   Select your model of camera.  If your model is not there then use the Add button to add it.
+                                 ii)  Ensure the "Olympus Camera Server URL" is set correctly.
+                                      This is the same URL address minus the "/DCIM" you can type into a web browser to access your camera.
+                                      Change the server URL if needed
+                                      e.g. Model E-M10 Mark I URL = "http://oishare", Model E-M10 Mark III URL = "http://192.168.0.10"
+                                 iii) Ensure the "SDCard Root Directory" is set correctly. This is usually "/DCIM". Need initial forward slash.
+                                 iv)  Test your camera is connected with the "Test Camera Connection" button.
+                                      If connected the text box below will fill with HTTP data from your camera.
+                                      If not connected there will be no data.
+                                      Save this HTTP data to file with the "Save Camera Data To File" button. This text file can be
+                                      emailed to me at MSGEndoDoc@gmail.com so that I can improve the program.
+     6.   App Transfer Images Page (Page 1)
+                                 i)   Set the download directory ("Transfer Files to This Directory").  Camera images will end up here.
+                                 ii)  Option 1: Press the grey triangle once to transfer images from camera to computer
+                                      Option 2: Click the Repeat Timer checkbox and wait for the timer (e.g. 60s) to automate periodic image transfers.
+     NOTE1:  Files downoaded will be remembered and not downloaded again on later transfers.
+     NOTE2:  App Download History page (Page 2) lists all previously downloaded files.
+             Deleted selected file records here will allow those images to be download again from the camera on later transfers.
+     NOTE3:  The Download history is stored in the text file OlympusCameraDownloadRecord.txt.  Do not edit this file
+     NOTE4:  The list of camera models with known connection URL are stroed in the ini file OlympusCameraModels.ini. Do not edit this file.'
+
+     Enjoy
+
+     Martin Gale (Copyright 2020)
+     msgendodoc@gmail.com.au
+     www.github.com/MSGENDO/OLYMPUSWIFI
+     This program is open source and can be used for commercial and non commercial purposes (MIT licence) so long as
+     full acknowledgement is made of the authors original contribution in any distribution of the derived work. The software is as is,
+     and absolutely no warranty of suitability of purpose or efficacy and is given, and the authors accept no liability whatsoever
+     for its use, consequences or effects. If it is not suitable for your  purpose then do not use this software.
+     Otherwise, please make good use of it.
 
 See comments in the code for further explanations
 
@@ -46,18 +69,31 @@ mail@isendo.com.au
 
 // TODO: There is still a very small memory leak somewhere of about $50k per access to the server - find this and fix it
 // TODO: Work out how to automatically seek and connect to the WiFi SSID signal even though another wifi signal may previously be connected - on Win and Linux
-// TODO: Release as open source on github and promote in Panasonic Lumix and Olympus user lists
 
 }
   {$mode delphi}{$H+}
 interface
 
 uses
-  Classes, SysUtils, ExtCtrls, Dialogs, fphttpclient
+  Classes, SysUtils, ExtCtrls, Dialogs, fphttpclient, IniFiles
    {$IFDEF WINDOWS}
   ,win32proc   // Allows OSVersion to be defined for different Windows versions
    {$ENDIF}
   ;
+
+Type   // An record for Olympus camera models held in a CSV database with fields:
+       // Index, Camera Model Name, Camera Model Server Addr, Camera Model Root Dir DCIM.
+ CameraVersion = record
+   CID:         integer;
+   CName:       String;
+   CServerAddr: String;
+   CRootDir:    String;
+   CNotes:      String;
+ end;
+
+Type
+ CameraVersions = array of CameraVersion;
+
 
 Type
 TImageFileInfo = record  // A single record of data for files or directories
@@ -74,13 +110,21 @@ end;
  TDCIMLists = array of TDCIMList;      // An array of TDCIMList arrays for holding data about multiple dirctories of images
  ListTypes  = Set of (APath, AFileName, AUnknown, AFileSize, ADate, ATime, ADownloaded);  // Nominals for data types in TImageFileInfo
 
- { TTransferImages }
+ { TTransferImages }  // depreciated as not using Threads as E-M10 MkIII can not accept multiple simultaneous downloads from more than one thread
 
-Type
+//Type
 
  //TOnUpdateGUIEvent = procedure(PercentDone: integer) of Object;    // an event for the TThread to be assigned to a procedure in the main form of the aplication
 
- TTransferImages = class(TThread) // The actual thread class for one event of accessing the Olympus camera server.  Using a TThread to free up the GUI
+ {NOTES
+ I initally decided that using a TThread would speed up the image download form the camer aand this worked for the OM-D E-M10 MkI  but for the
+ OM-D E-M10 MkIII there was a camera server error on starting a second or more threwads while still downoading an earlier image. The MkIII camera sever
+ can only cope with one image download at a time. So we dont need the threaded download now and I wrote Function TOIShareReader.GetOneImage to do
+ a non threaded download of the file.  Presumably the SDCard directory and files downloads is so quick that the trheads overlapping are not a problem.
+ }
+
+
+{ TTransferImages = class(TThread) // The actual thread class for one event of accessing the Olympus camera server.  Using a TThread to free up the GUI
 private
  FHTTPClient:       TfpHTTPClient;       // the http client component used to contact the server
  FHTTPRequest:      String;              // the string containing the request to the HTTP server
@@ -97,65 +141,123 @@ public
  procedure   Execute; override;                                                                 // Calls the seever
  end;
 
-
+}
 { TOIShareReader }
 Type
  TOIShareReader = class // The class which the uses the class TTransferImages classs to set up and receive data from the Olympus camera SD card server.
 
 private
- FServerAddr:       string;     // The TfpHTTPClient URL to reach the camera server - typically for Olympus cameras 'http://oishare' with '/DCIM' added to access the image root directory
- FDCIMDir:          string;     // The SD card root directory for images - typically '/DCIM'
- FDirList:          TDCIMList;  // An array of folder information in the SD card root /DCIM directory
- FImageLists:       TDCIMLists; // A set of arrays of image information, one array for one SD card directory
- FDownLoadDir:      string;     // Stores the destination directory for images on download
- FDownloadedList:   TStringList;// A list of all the previous image downloads done - referenced so previous images are not downloaded again
- FLastDownloadTime: TDateTime;  // Time of last download
- FLastDownLoaded:   string;     // The path and filename for the last downloaded image
+ FHTTPRecord:       TStringlist;    // Records the camera server HTTP output for analysis and testing
+ FServerAddr:       string;         // The TfpHTTPClient URL to reach the camera server - typically for Olympus cameras 'http://oishare' with '/DCIM' added to access the image root directory
+ FDCIMDir:          string;         // The SD card root directory for images - typically '/DCIM'
+ FDirList:          TDCIMList;      // An array of folder information in the SD card root /DCIM directory
+ FImageLists:       TDCIMLists;     // A set of arrays of image information, one array for one SD card directory
+ FDownLoadDir:      string;         // Stores the destination directory for images on download
+ FDownloadedList:   TStringList;    // A list of all the previous image downloads done - referenced so previous images are not downloaded again
+ FLastDownloadTime: TDateTime;      // Time of last download
+ FLastDownLoaded:   string;         // The path and filename for the last downloaded image
+ FCurrentCamera:    integer;        // The currently selected camera
+ FCameraModels:     CameraVersions; // An list of possible camera models;
+ FIsConnected:       Boolean;
 
  Procedure   Initialize;
  Procedure   CleanUp;
  Function    FindDownloadRecord(FindThis: String): integer;
  Function    GetOSVersion: String;
- Function    GetDCIMResponseSL(AHTTPRequest: String; AResponseFilename: String): TStringlist;     // Returns a TStringlist
- Function    GetDCIMResponseMS(AHTTPRequest: String; AResponseFilename: String): TMemoryStream;   // Returns a TMemoryStream
+ //Function    GetDCIMResponseSL(AHTTPRequest: String; AResponseFilename: String): TStringlist;     // Returns a TStringlist   // depreciated
+ //Function    GetDCIMResponseMS(AHTTPRequest: String; AResponseFilename: String): TMemoryStream;   // Returns a TMemoryStream // depreciated
+ Function    GetHTTPResponseSL(AHTTPRequest: String;  AResponseFilename: String): TStringList;    // Retuns a TStringlist
+ Function    GetHTTPResponseMS(AHTTPRequest: String; AResponseFilename: String): TMemoryStream;
  Function    GetDCIMList(AHTTPResponse: TStringList): TDCIMList;                                  // Generic function to turn the Javascript response into an array of file data
  Function    GetDCIMDirList(AServerURL: String): TDCIMList;                                       // Specific response to use GetDCIMDirList to retrieve SD card directory data
  Function    GetDCIMImageList(ADir: String): TDCIMList;                                           // Specific response to use GetDCIMDirList to retrieve SD card image file data
 
 public
+
+Const HelpText = 'HOW TO USE THIS PROGRAM' + #13 + #10 + // TODO: need different EOL for Linux/macOS
+'  ' + #13 + #10 +
+'  1.   Take some photos on your Olympus camera ' + #13 + #10 +
+'  2.   Use the Olympus camera menu to select Connection to Smartphone.  This starts the camera WiFi server. ' + #13 + #10 +
+'  3.   Connect your computer to this WiFi signal in the usual way for your operating system ' + #13 + #10 +
+'  4.   Run this OlympusWIFI program ' + #13 + #10 +
+'  5.   App Settings (Page 3): i)   Select your model of camera.  If your model is not there then use the Add button to add it. ' + #13 + #10 +
+'                              ii)  Ensure the "Olympus Camera Server URL" is set correctly. ' + #13 + #10 +
+'                                   This is the same URL address minus the "/DCIM" you can type into a web browser to access your camera. ' + #13 + #10 +
+'                                   Change the server URL if needed ' + #13 + #10 +
+'                                   e.g. Model E-M10 Mark I URL = "http://oishare", Model E-M10 Mark III URL = "http://192.168.0.10"  ' + #13 + #10 +
+'                              iii) Ensure the "SDCard Root Directory" is set correctly. This is usually "/DCIM". Need initial forward slash. ' + #13 + #10 +
+'                              iv)  Test your camera is connected with the "Test Camera Connection" button. ' + #13 + #10 +
+'                                   If connected the text box below will fill with HTTP data from your camera.  ' + #13 + #10 +
+'                                   If not connected there will be no data. ' + #13 + #10 +
+'                                   Save this HTTP data to file with the "Save Camera Data To File" button. This text file can be ' + #13 + #10 +
+'                                   emailed to me at MSGEndoDoc@gmail.com so that I can improve the program.   ' + #13 + #10 +
+'  6.   App Transfer Images Page (Page 1)  ' + #13 + #10 +
+'                              i)   Set the download directory ("Transfer Files to This Directory").  Camera images will end up here. ' + #13 + #10 +
+'                              ii)  Option 1: Press the grey triangle once to transfer images from camera to computer ' + #13 + #10 +
+'                                   Option 2: Click the Repeat Timer checkbox and wait for the timer (e.g. 60s) to automate periodic image transfers. ' + #13 + #10 +
+'  NOTE1:  Files downoaded will be remembered and not downloaded again on later transfers. ' + #13 + #10 +
+'  NOTE2:  App Download History page (Page 2) lists all previously downloaded files. ' + #13 + #10 +
+'          Deleted selected file records here will allow those images to be download again from the camera on later transfers. ' + #13 + #10 +
+'  NOTE3:  The Download history is stored in the text file OlympusCameraDownloadRecord.txt.  Do not edit this file ' + #13 + #10 +
+'  NOTE4:  The list of camera models with known connection URL are stroed in the ini file OlympusCameraModels.ini. Do not edit this file.' + #13 + #10 +
+'  ' + #13 + #10 +
+'  Enjoy ' + #13 + #10 +
+'  ' + #13 + #10 +
+'  Martin Gale (Copyright 2020) ' + #13 + #10 +
+'  msgendodoc@gmail.com.au ' + #13 + #10 +
+'  www.github.com/MSGENDO/OLYMPUSWIFI  ' + #13 + #10 +
+'  This program is open source and can be used for commercial and non commercial purposes (MIT licence) so long as ' + #13 + #10 +
+'  full acknowledgement is made of the authors original contribution in any distribution of the derived work. The software is as is, ' + #13 + #10 +
+'  and absolutely no warranty of suitability of purpose or efficacy and is given, and the authors accept no liability whatsoever  ' + #13 + #10 +
+'  for its use, consequences or effects. If it is not suitable for your  purpose then do not use this software.   ' + #13 + #10 +
+'  Otherwise, please make good use of it. ' + #13 + #10;
+
+var
  ErrorList:  TStringList;   // Holds a listing of any errors encountered in the program.
  IsDownloading: boolean;    // Prevents further attepts at server contact when server already connected
- TransferNow: TTransferImages;
+ //TransferNow: TTransferImages;  // Depreciated
+
  Constructor Create;
  Destructor  Destroy; override;
  Procedure   RegisterAllSDCardFilesAsDownloaded;
+ Function    RemoveEqualsSign(S: String): String;
+ Function    RemoveIllegalFilenameChar(S: String): String;
  Procedure   RememberDownloadDir;
- Procedure   RememberServerAddr;
- Procedure   RememberSDRootDir;
+ //Procedure   RememberServerAddr;   // depreciated
+ //Procedure   RememberSDRootDir;    // depreciated
  Function    CountFilesForDownload: integer;
  Function    DCIMListToStringList(ADCIMList: TDCIMList; AListTypes: ListTypes): TStringList;
  Procedure   GetSDCardData;
  Procedure   DownloadImages(SaveImageDir: String);
  Function    BeautifyDownloadList: TStringList;
+ Function    CameraModelsToList: TStringList;
+ Procedure   UpdateCameraSettingsFromModel(CameraID: integer);
+ Procedure   SaveCameraSettingsToModel;
+ Procedure   AddNewCameraModel(AName: String);
+ Procedure   LoadCameraModelData;
+ Procedure   SaveCameraModelData;
 
 Published
- property ServerAddr:       string      read FServerAddr       write FServerAddr;        // typically for Olympus camera 'http://oishare'
- property DCIMDir:          string      read FDCIMDir          write FDCIMDir;           // typically '/DCIM'
- property DirList:          TDCIMList   read FDirList          write FDirList;           // As above in private section
- property ImageLists:       TDCIMLists  read FImageLists       write FImageLists;        //                   "
- property DownloadDir:      String      read FDownloadDir      write FDownloadDir;       //                   "
- property DownloadList:     TStringList read FDownloadedList   write FDownloadedList;    //                   "
- property LastDownLoadTime: TDateTime   read FLastDownLoadTime write FLastDownLoadTime;  //                   "
- property LastDownlowdedImage: String   read FLastDownloaded   write FLastDownloaded;    //                   ?
-
+ property ServerAddr:       string         read FServerAddr       write FServerAddr;        // typically for Olympus camera 'http://oishare'
+ property DCIMDir:          string         read FDCIMDir          write FDCIMDir;           // typically '/DCIM'
+ property DirList:          TDCIMList      read FDirList          write FDirList;           // As above in private section
+ property ImageLists:       TDCIMLists     read FImageLists       write FImageLists;        //                   "
+ property HTTPRecord:       TStringlist    read FHTTPRecord       write FHTTPRecord;        //                   "
+ property DownloadDir:      String         read FDownloadDir      write FDownloadDir;       //                   "
+ property DownloadList:     TStringList    read FDownloadedList   write FDownloadedList;    //                   "
+ property LastDownLoadTime: TDateTime      read FLastDownLoadTime write FLastDownLoadTime;  //                   "
+ property LastDownlowdedImage: String      read FLastDownloaded   write FLastDownloaded;    //                   ?
+ property CurrentCamera:    integer        read FCurrentCamera    write FCurrentCamera;     // The currently selected camera
+ property CameraModels:     CameraVersions read FCameraModels     write FCameraModels;      // The array of possible camer models
+ property IsConnected: Boolean             read FIsConnected      write FIsConnected;
 end;
 
 implementation
 
  uses Olympus_ImageSave1;
 
-{ TTransferImages } // TThread for the actual server communication so GUI is not locked and can be updated
-
+{ TTransferImages } // TThread for the actual server communication so GUI is not locked and can be updated   // depreciated
+{
 constructor TTransferImages.Create;
 begin
   inherited Create(false);   // false indicates the thread is not suspended, so it begins to run as soon as the constructor is finished
@@ -167,7 +269,7 @@ begin
   FOutputSort     := oStrList;                // default is a stringlist
 end;
 
-destructor TTransferImages.Destroy;
+destructor TTransferImages.Destroy;      // depreciated
 begin
   //FHTTPClient.free;      // These objects should be freed before the TThread is freed but if do so then access violation so
   //FHTTPResponseSL.free;  // it seems that the TThread class destroy method frees them later anyway.
@@ -176,7 +278,7 @@ begin
   inherited destroy;
 end;
 
-function TTransferImages.GetHTTPResponseSL(AHTTPRequest: String; AResponseFilename: String): TStringlist;
+function TTransferImages.GetHTTPResponseSL(AHTTPRequest: String; AResponseFilename: String): TStringlist;     // depreciated
 begin   // Arranges to GET a TStringlist from the server, with the variable FOutputSort flagging the output is to be a stringlist
   FOutputSort       := oStrList;
   FHTTPRequest      := AHTTPRequest;
@@ -185,7 +287,7 @@ begin   // Arranges to GET a TStringlist from the server, with the variable FOut
   Result            := FHTTPResponseSL;
 end;
 
-function TTransferImages.GetHTTPResponseMS(AHTTPRequest: String; AResponseFilename: String): TMemoryStream;
+function TTransferImages.GetHTTPResponseMS(AHTTPRequest: String; AResponseFilename: String): TMemoryStream;   // depreciated
 begin   // Arranges to GET a TMemoyStream from the server, with the variable FOutputSort flagging the output is to be a memorystream
   FOutputSort       := oMStream;
   FHTTPRequest      := AHTTPRequest;
@@ -194,7 +296,7 @@ begin   // Arranges to GET a TMemoyStream from the server, with the variable FOu
   Result            := FHTTPResponseMS;
 end;
 
-procedure TTransferImages.Execute;
+procedure TTransferImages.Execute;   // depreciated
 begin   // THis uses TfpHTTPClient to get from the server either a TStringlist of text or else a TMemorystream of data depending on the
         // FOuptutSource flag setting. If there is a valid directory defined by FResponseFilename, then the file either as text or data,
         // will be saved to this given directory
@@ -203,9 +305,9 @@ begin   // THis uses TfpHTTPClient to get from the server either a TStringlist o
     (FHTTPRequest <> '')                       then
 //    (FHTTPRequest.Contains('http://oishare')) then     // Usually 'http://oishare' for olympus cameras
                                                          // can't expect this as some cameras emit an IP address e.g. 192.168.1.10
- Try
-   If FOutputSort = oStrList then FHTTPClient.SimpleGet(FHTTPRequest, FHTTPResponseSL) else
-   If FOutputSort = oMStream then FHTTPClient.SimpleGet(FHTTPRequest, FHTTPResponseMS);
+ Try                                                                                          // For OM-D E-M10 MkI SimpleGet works both times. For OM-D E-M10 Mark III
+   If FOutputSort = oStrList then FHTTPClient.SimpleGet(FHTTPRequest, FHTTPResponseSL) else   // SimpleGet works for SD card data retrieval not for file retrieval
+   If FOutputSort = oMStream then FHTTPClient.Get(FHTTPRequest, FHTTPResponseMS);             // where Get works.   Why?
 
    // Save server response file to disk only if a filename with valid path has been given
    If   (FResponseFilename > '') and
@@ -223,7 +325,7 @@ begin   // THis uses TfpHTTPClient to get from the server either a TStringlist o
    FErrorList.add('Sorry: The Olympus camera could not be reached at ' + FHTTPRequest + ' [' + DateTimeToStr(Now,False) + ']');
  end;
 end;
-
+}
 { TOIShareReader }
 
 constructor TOIShareReader.Create;
@@ -276,6 +378,7 @@ procedure TOIShareReader.Initialize;     // Sets up the program initial default 
 var
   a: integer;
 begin
+  FHTTPRecord       := TStringlist.create;
   FServerAddr       := 'http://oishare'; // 'http://oishare' typically for Olympus camera. 'http://oishare/DCIM' to access files (no need for /*.*)
   FDCIMDir          := '/DCIM';          // typically '/DCIM'
   SetLength(FDirList,0);
@@ -290,6 +393,7 @@ begin
   FLastDownloadTime := Now;
   FLastDownloaded   := '';
   IsDownloading     := false;
+  IsConnected       := false;
   Try
     {$IFDEF WINDOWS}
     FDownloadedList.LoadFromFile(GetCurrentDir + '\OlympusCameraDownloadRecord.txt');
@@ -299,7 +403,12 @@ begin
   Except;
     FDownloadedList := TStringList.create;
   end;
-    // Load the previous run's PC's download directory
+    CurrentCamera := 0;  // default
+    Setlength(FCameraModels,1);
+    LoadCameraModelData;
+    UpdateCameraSettingsFromModel(CurrentCamera);
+
+  // Load the previous run's PC's download directory
     a := FindDownloadRecord('DownloadDir='); // if no string found then -1
     If (a > -1) and (length(FDownloadedList.strings[a]) > 12) then // i.e. 'DownloadDir='
     FDownLoadDir := Copy(FDownloadedList.strings[a],13,length(FDownloadedList.strings[a])-12) else
@@ -307,34 +416,95 @@ begin
     If not DirectoryExists(FDownLoadDir) then FDownloadDir := GetCurrentDir;
 
     // Load the previous run's camera's server address
-    a := FindDownloadRecord('CameraURL='); // if no string found then -1
-    If (a > -1) and (length(FDownloadedList.strings[a]) > 10) then // i.e. 'CameraURL='
-    FServerAddr := Copy(FDownloadedList.strings[a],11,length(FDownloadedList.strings[a])-10) else
-    FServerAddr := 'http://oishare';
+    //a := FindDownloadRecord('CameraURL='); // if no string found then -1
+    //If (a > -1) and (length(FDownloadedList.strings[a]) > 10) then // i.e. 'CameraURL='
+    //FServerAddr := Copy(FDownloadedList.strings[a],11,length(FDownloadedList.strings[a])-10) else
+    //FServerAddr := 'http://oishare';
 
     // Load the previous run's camera's root dir
-    a := FindDownloadRecord('CameraROOTDir='); // if no string found then -1
-    If (a > -1) and (length(FDownloadedList.strings[a]) > 14) then // i.e. 'CameraROOTDir='
-    FDCIMDir := Copy(FDownloadedList.strings[a],15,length(FDownloadedList.strings[a])-14) else
-    FDCIMDir := '/DCIM';
+    //a := FindDownloadRecord('CameraROOTDir='); // if no string found then -1
+    //If (a > -1) and (length(FDownloadedList.strings[a]) > 14) then // i.e. 'CameraROOTDir='
+    //FDCIMDir := Copy(FDownloadedList.strings[a],15,length(FDownloadedList.strings[a])-14) else
+    //FDCIMDir := '/DCIM';
 end;
 
 procedure TOIShareReader.CleanUp;        // Organises the final program state
 var
   a: integer;
 begin
+  FreeAndNil(FHTTPRecord);
   SetLength(FDirList,0);
   For a := 0 to length(FImageLists) -1 do
   SetLength(FImageLists[a],0);
   SetLength(FImageLists,0);
   RememberDownloadDir;
-  RememberServerAddr;
-  RememberSDRootDir;
+  //RememberServerAddr;  // depreciated - now using OlympusCameraModels.ini
+  //RememberSDRootDir;   // depreciated - now using OlympusCameraModels.ini
+  SaveCameraModelData;
+  Setlength(FCameraModels,0);
+  {$IFDEF WINDOWS}
   FDownloadedList.SaveToFile(GetCurrentDir + '\OlympusCameraDownloadRecord.txt');
+  {$ELSE}
+  FDownloadedList.SaveToFile(GetCurrentDir + '/OlympusCameraDownloadRecord.txt');
+  {$IFEND}
   FreeAndNil(FDownloadedList);
   FreeAndNil(ErrorList);
 end;
 
+procedure TOIShareReader.LoadCameraModelData;  // Loads all the camera model details from an ini file
+var
+ a: integer;
+ IFile: Tinifile;
+begin
+  Try
+    //If Fileexists(GetCurrentDir + '/OlympusCameraModels.ini') then
+    {$IFDEF WINDOWS}
+    IFile := TInifile.create(GetCurrentDir + '\OlympusCameraModels.ini');
+    {$ELSE}
+    IFile := TInifile.create(GetCurrentDir + '/OlympusCameraModels.ini');
+    {$ENDIF}
+    a := IFile.ReadInteger('CAMERA_MODELS', 'NumModels', 1); // i.e.  if none yet, set up one default camera model
+    FCurrentCamera := IFile.ReadInteger('CAMERA_models', 'CurrentModel',1);
+    If FCurrentCamera > a -1 then FCurrentCamera := a -1;
+    SetLength(FCameraModels,a);
+    For a := 0 to length(FCameraModels) -1 do
+    begin;                                                                       // Sets these default values if no info in IniFile yet
+      FCameraModels[a].CID         := IFile.ReadInteger('CAMERA_' + InttoStr(a), 'C_Index',       0);
+      FCameraModels[a].CName       := IFile.ReadString ('CAMERA_' + InttoStr(a), 'C_Name',       'OM-D E-M10 (Mark I)');
+      FCameraModels[a].CServerAddr := IFile.ReadString ('CAMERA_' + InttoStr(a), 'C_ServerAddr', 'http://oishare');
+      FCameraModels[a].CRootDir    := IFile.ReadString ('CAMERA_' + InttoStr(a), 'C_ROOTDIR',    '/DCIM');
+      FCameraModels[a].CNotes      := IFile.ReadString ('CAMERA_' + InttoStr(a), 'C_NOTES',       'No Notes');
+    end;
+  Finally
+    FreeAndNil(IFile);
+  end;
+end;
+
+procedure TOIShareReader.SaveCameraModelData;  // Saves all the camera model details to an ini file
+var
+ a: integer;
+ IFile: Tinifile;
+begin
+  Try
+    {$IFDEF WINDOWS}
+    IFile := TInifile.create(GetCurrentDir + '\OlympusCameraModels.ini');
+    {$ELSE}
+    IFile := TInifile.create(GetCurrentDir + '/OlympusCameraModels.ini');
+    {$ENDIF}
+    IFile.WriteInteger('CAMERA_MODELS', 'NumModels', length(FCameraModels));
+    IFile.WriteInteger('CAMERA_models', 'CurrentModel', FCurrentCamera);
+    For a := 0 to length(FCameraModels) -1 do
+    begin;
+      IFile.WriteInteger('CAMERA_' + InttoStr(a), 'C_Index',      FCameraModels[a].CID);         //,'0'
+      IFile.WriteString ('CAMERA_' + InttoStr(a), 'C_Name',       FCameraModels[a].CName);       //,'OM-D E-M10 Mark I');
+      IFile.WriteString ('CAMERA_' + InttoStr(a), 'C_ServerAddr', FCameraModels[a].CServerAddr); //,'http://oishare');
+      IFile.WriteString ('CAMERA_' + InttoStr(a), 'C_ROOTDIR',    FCameraModels[a].CRootDir);    //,'/DCIM');
+      IFile.WriteString ('CAMERA_' + InttoStr(a), 'C_NOTES',      FCameraModels[a].CNotes);      //,'');
+    end;
+  Finally
+    FreeAndNil(IFile);
+  end;
+end;
 
 procedure TOIShareReader.RegisterAllSDCardFilesAsDownloaded;
 var            // Checks the SD card for files and marks them all as previously downloaded
@@ -357,8 +527,8 @@ begin;         // which have not been downloaded by this program, and you do not
     end;
   end;
   RememberDownloadDir;
-  RememberServerAddr;
-  RememberSDRootDir;
+  //RememberServerAddr;   // Depreciated as now using OlympusCameraModels.ini
+  //RememberSDRootDir;    // Depreciated as now using OlympusCameraModels.ini
   {$IFDEF WINDOWS}
   Try FDownloadedList.SaveToFile(GetCurrentDir + '\OlympusCameraDownloadRecord.txt');
   except
@@ -370,6 +540,38 @@ begin;         // which have not been downloaded by this program, and you do not
   {$ENDIF}
 end;
 
+Function TOIShareReader.RemoveEqualsSign(S: String): String;
+var
+ a: integer;
+begin;
+  If S > '' then
+  Repeat
+    a := Pos('=', S);               // Will be used in an ini file later so can ot have = sign
+    If a > 0 then
+    delete(S, a, 1);
+  until Pos('=', S) = 0;
+  Result := S;
+end;
+
+Function TOIShareReader.RemoveIllegalFilenameChar(S:String): String;  // Remove illegal file name characters
+var
+ a: integer;
+ ts1: String;
+begin;
+ ts1 := S;
+ a := 1;
+ If length(ts1) > 0 then
+ Repeat
+  If (length(ts1) > 0) and
+     (ts1[a] in ['/','\',':','*','"','<','>','|']) then  // these char for Windows  - what about Linux, Mac?
+  begin;
+    delete(ts1,a,1);
+    If a > 1 then dec(a);
+  end;
+  Inc(a);
+ until a >= length(ts1) -1;
+ Result := ts1;
+end;
 
 function TOIShareReader.CountFilesForDownload: integer; // Counts how many images need downloading
 var             // Updates and tallies the number of image files on the SD card due for downoad
@@ -391,11 +593,11 @@ begin;
   end;
 end;
 
-
-Function TOIShareReader.FindDownloadRecord(FindThis: String): integer;
+function TOIShareReader.FindDownloadRecord(FindThis: String): integer;
 var                  // Identifies where the download directory record is in the OlympusCameraDownloadRecord.txt file
   a, Found: integer; // All this so I dont use TIniFile which is not available on Linux, Mac!
 begin
+  Result := -1;
   Found  := -1;
   If (FDownloadedList <> nil)    and
      (FDownloadedList.count > 0) then
@@ -411,13 +613,14 @@ begin
   end;
   Result := Found;
 end;
-
+{
 function TOIShareReader.GetDCIMResponseSL(AHTTPRequest: String; AResponseFilename: String): TStringlist;// Queries the Olympus camera http server for a response
 var
   AHTTPThread: TTransferImages;
 begin;
   AHTTPThread := TTransferImages.create;
   Result      := AHTTPThread.GetHTTPResponseSL(AHTTPRequest,AResponseFilename);
+  FHTTPRecord.AddStrings(Result);
   ErrorList.AddStrings(AHTTPThread.FErrorList);
   AHTTPThread.Free;
 end;
@@ -430,6 +633,66 @@ begin;
   Result      := AHTTPThread.GetHTTPResponseMS(AHTTPRequest,AResponseFilename);
   ErrorList.AddStrings(AHTTPThread.FErrorList);
   AHTTPThread.Free;
+end;
+}
+Function TOiShareReader.GetHTTPResponseSL(AHTTPRequest: String;  AResponseFilename: String): TStringList;
+var
+  AHTTPClient: TfpHTTPClient;
+  AHTTPResponseSL: TStringList;
+begin;
+  Result := nil;
+  AHTTPClient := TfpHTTPClient.create(nil);
+  AHTTPResponseSL := TStringList.create;
+  If (AHTTPRequest <> '') then
+  Try
+    AHTTPClient.SimpleGet(AHTTPRequest, AHTTPResponseSL);
+    FHTTPRecord.AddStrings(AHTTPResponseSL);
+    //AHTTPClient.SimpleGet(AHTTPRequest, AHTTPResponseMS);
+    // Save server response file to disk only if a filename with valid path has been given
+    If   (AResponseFilename > '') and
+         (DirectoryExists(ExtractFilePath(AResponseFilename))) then
+      Try
+        AHTTPResponseSL.SaveToFile(AResponseFilename);
+      except
+        ErrorList.add('Sorry: Could not save file ' + AResponseFilename + ' [' + DateTimeToStr(Now,False) + ']');
+      end;
+  except;
+    //beep;
+    ErrorList.add('Sorry: The Olympus camera could not be reached at ' + AHTTPRequest + ' [' + DateTimeToStr(Now,False) + ']');
+  end;
+  Result := AHTTPResponseSL;
+  FreeAndNil(AHTTPClient);
+  //FreeAndNil(AHTTPResponseMS);  // dont free otherwise result is nil but remember to free it externally
+
+end;
+
+Function TOIShareReader.GetHTTPResponseMS(AHTTPRequest: String; AResponseFilename: String): TMemoryStream;  // Non threaded - to test if multiple threads a problem for camera server
+var
+  AHTTPClient: TfpHTTPClient;
+  AHTTPResponseMS: TMemoryStream;
+begin;
+  Result := nil;
+  AHTTPClient := TfpHTTPClient.create(nil);
+  AHTTPResponseMS := TMemoryStream.create;
+  If (AHTTPRequest <> '') then
+  Try
+    AHTTPClient.SimpleGet(AHTTPRequest, AHTTPResponseMS);
+    //AHTTPClient.SimpleGet(AHTTPRequest, AHTTPResponseMS);
+    // Save server response file to disk only if a filename with valid path has been given
+    If   (AResponseFilename > '') and
+         (DirectoryExists(ExtractFilePath(AResponseFilename))) then
+      Try
+        AHTTPResponseMS.SaveToFile(AResponseFilename);
+      except
+        ErrorList.add('Sorry: Could not save file ' + AResponseFilename + ' [' + DateTimeToStr(Now,False) + ']');
+      end;
+  except;
+    //beep;
+    ErrorList.add('Sorry: The Olympus camera could not be reached at ' + AHTTPRequest + ' [' + DateTimeToStr(Now,False) + ']');
+  end;
+  Result := AHTTPResponseMS;
+  FreeAndNil(AHTTPClient);
+  //FreeAndNil(AHTTPResponseMS);  // dont free otherwise result is nil but remember to free it externally
 end;
 
 function TOIShareReader.GetDCIMList(AHTTPResponse: TStringList): TDCIMList;  // Parses the wireless Olympus camera http server http response for directory or file info in included Javascript object
@@ -547,8 +810,8 @@ begin
   FDownloadedList.Insert(0,'DownloadDir=' + FDownloadDir);
 end;
 
-procedure TOIShareReader.RememberServerAddr;    // Update the saved download directory to file too
-var
+{procedure TOIShareReader.RememberServerAddr;    // Update the saved download directory to file too
+var                                             // Depreciated - now using the OlympusCameraModels.ini file
   a: integer;
 begin
   a := FindDownloadRecord('CameraROOTDir=');
@@ -560,7 +823,7 @@ begin
 end;
 
 procedure TOIShareReader.RememberSDRootDir;    // Update the saved download directory to file too
-var
+var                                            // Depreciated - now using the OlympusCameraModels.ini file
   a: integer;
 begin
   a := FindDownloadRecord('CameraURL=');
@@ -570,16 +833,24 @@ begin
   FDownloadedList.Insert(1,'CameraURL=' + FServerAddr) else
   FDownloadedList.add('CameraURL=' + FServerAddr);
 end;
-
+}
 function TOIShareReader.GetDCIMDirList(AServerURL: String): TDCIMList; // Queries the server for a list of directories on the SD card
 var
  AHTTPResponse: TStringList;
 Begin;
-  FServerAddr := AServerURL;
-  Setlength(Result,0);                                             // AServerURL
-  AHTTPResponse := GetDCIMResponseSL(FServerAddr + FDCIMDir,'');   //'http://oishare/DCIM','');
-  Result        := GetDCIMList(AHTTPResponse);                     // NB This TDCIMList needs to be freed externally - don't forget
-  FreeAndNil(AHTTPResponse);
+  Setlength(Result,0);
+  FServerAddr := AServerURL;                                       // AServerURL
+  If (length(FServerAddr) > 0) and
+     (length(FDCIMDir)    > 0) then
+  begin;
+    If not (FDCIMDir[1] ='/') then
+    insert('/',FDCIMDir,1); // Adds a prefix '/' if not present already in ADir FServerAddr + FDCIMDir
+    AHTTPResponse := GetHTTPResponseSL(FServerAddr + FDCIMDir,'');   //'http://oishare/DCIM','');
+
+    Result        := GetDCIMList(AHTTPResponse);                     // NB This TDCIMList needs to be freed externally - don't forget
+    FreeAndNil(AHTTPResponse);
+  end else
+  ErrorList.add('Sorry: No Server address or SD card root directory were given to read' + ' [' + DateTimeToStr(Now,False) + ']'); ;;
 end;
 
 function TOIShareReader.GetDCIMImageList(ADir: String): TDCIMList; // Queries the server for a list of directories on the SD card
@@ -594,12 +865,12 @@ begin
     insert('/',FDCIMDir,1); // Adds a prefix '/' if not present already in ADir FServerAddr + FDCIMDir
     If not (ADir[1] ='/') then
     insert('/',ADir,1); // Adds a prefix '/' if not present already in ADir FServerAddr + FDCIMDir
-    AHTTPResponse := GetDCIMResponseSL(FServerAddr + FDCIMDir + ADir,'');  //'http://oishare/DCIM' + /directory
+    AHTTPResponse := GetHTTPResponseSL(FServerAddr + FDCIMDir + ADir,'');  //'http://oishare/DCIM' + /directory
     Result        := GetDCIMList(AHTTPResponse);
     //FImageList    := GetDCIMList(AHTTPResponse);  // Do we want/need this to happen
     FreeAndNil(AHTTPResponse);
   end else
-  ErrorList.add('Sorry: No SD card root directory or image directory name was given to read' + ' [' + DateTimeToStr(Now,False) + ']'); ;
+  ErrorList.add('Sorry: No SD card root directory or image directory name were given to read' + ' [' + DateTimeToStr(Now,False) + ']'); ;
 end;
 
 function TOIShareReader.DCIMListToStringList(ADCIMList: TDCIMList; AListTypes: ListTypes): TStringList;
@@ -633,6 +904,7 @@ var
 begin;
   //clear all previous lists to avoid memory leaks
   IsDownloading := true;
+  FHTTPRecord.clear;
   SetLength(FDirList,0);
   For a := 0 to length(FImageLists) -1 do
   SetLength(FImageLists[a],0);
@@ -642,12 +914,14 @@ begin;
   // Then read each directory's image list
   If length(FDirList) > 0 then
   begin;
+    Self.IsConnected := true;
     Setlength(FImageLists,length(FDirList));  // Make one image list for each directory
     For a := 0 to length(FImageLists) -1 do
     begin;
       FImageLists[a] := GetDCIMImageList(FDirList[a].AFileName); // Gets each image directory's file list for display
     end
-  end;
+  end else
+  IsConnected := false;
  IsDownloading := false;
 end;
 
@@ -677,9 +951,13 @@ begin
           begin;
             AHTTPRequest :=  FServerAddr + FImageLists[a].[b].APath + '/' + FImageLists[a].[b].AFileName;
             {$IFDEF WINDOWS}
-            FStream := GetDCIMResponseMS(AHTTPRequest, SaveImageDir + '\' + FImageLists[a].[b].AFileName); // Queries the Olympus camera http server for a response, saves result to file
+            //FStream := GetDCIMResponseMS(AHTTPRequest, SaveImageDir + '\' + FImageLists[a].[b].AFileName); // Queries the Olympus camera http server for a response, saves result to file
+            // Testing without threads
+            FStream := GetHTTPResponseMS(AHTTPRequest, SaveImageDir + '\' + FImageLists[a].[b].AFileName);  // Non threaded - to test if multiple threads a problem for camera server
+
             {$ELSE}
-            FStream := GetDCIMResponseMS(AHTTPRequest, SaveImageDir + '/' + FImageLists[a].[b].AFileName); // Queries the Olympus camera http server for a response, saves result to file
+//           FStream := GetDCIMResponseMS(AHTTPRequest, SaveImageDir + '/' + FImageLists[a].[b].AFileName); // Queries the Olympus camera http server for a response, saves result to file
+             FStream := GetHTTPResponseMS(AHTTPRequest, SaveImageDir + '/' + FImageLists[a].[b].AFileName);  // Non threaded - to test if multiple threads a problem for camera server
             // If Linux or Mac need a / not a \ in the path.
             {$ENDIF}
             FreeAndNil(FStream);
@@ -691,7 +969,7 @@ begin
                                 FImageLists[a].[b].ADate + '$!?' + FImageLists[a].[b].ATime     + '$!?' + BoolToStr(FImageLists[a].[b].ADownloaded));
 
             {$IFDEF WINDOWS}   // Cross platform hassle fixed
-            FLastDownloaded := Self.DownloadDir + '\' + FImageLists[a].[b].AFileName;   // records the path and filename of the last downloaded image for display
+            FLastDownloaded := FDownloadDir + '\' + FImageLists[a].[b].AFileName;   // records the path and filename of the last downloaded image for display
             {$ELSE}
             FLastDownloaded := Self.DownloadDir + '/' + FImageLists[a].[b].AFileName;
             // If Linux or Mac need a / not a \ in the path.
@@ -699,13 +977,15 @@ begin
 
             inc(c); // counts how many downloads already done so far, for updating the GUI Progressbar
             If FileExists(FLastDownloaded) then
-            begin
+            Try
               If Uppercase(ExtractFileExt(FLastDownloaded)) = '.JPG' then
               Form_Main.ImageView.Picture.Jpeg.LoadFromFile(FLastDownloaded) else
               If Uppercase(ExtractFileExt(FLastDownloaded)) = '.BMP' then
               Form_Main.ImageView.Picture.Bitmap.LoadFromFile(FLastDownloaded);
+            Except
+              ErrorList.add('Sorry:  Could not dislay the last image downloaded (' + FLastDownloaded + ')');
+              Form_Main.ImageView.Picture.Clear;
             end;
-
           end;  // Updates the GUI
           If c > 0 then Form_Main.OnUpdateGUI(round((c/d)*100)) else
                         Form_Main.ProgressBar1.Position := 0;
@@ -716,8 +996,9 @@ begin
    end else
   ErrorList.add('Sorry: Could not find or create the download directory: ' + SaveImageDir + ' [' + DateTimeToStr(Now,False) + ']');
   RememberDownloadDir;
-  RememberServerAddr;
-  RememberSDRootDir;
+  SaveCameraModelData;
+  //RememberServerAddr;   // depreciated - using OlymousCameraModels.ini now
+  //RememberSDRootDir;    // depreciated - using OlymousCameraModels.ini now
 
   {$IFDEF WINDOWS}
   Try FDownloadedList.SaveToFile(GetCurrentDir + '\OlympusCameraDownloadRecord.txt');
@@ -759,6 +1040,59 @@ begin;
     end;
   end;
 
+function TOIShareReader.CameraModelsToList: TStringList;
+var
+  a: integer;
+begin;
+  Result := TStringlist.create;        // remember to free this TStringlist externally
+  If length(FCameraModels) > 0 then
+  begin;
+    For a := 0 to length(FCameraModels) -1 do
+      Result.add(FCameraModels[a].CName);
+  end;
+end;
+
+procedure TOIShareReader.UpdateCameraSettingsFromModel(CameraID: integer); // Sets the new camera model settings
+begin
+  If (CameraID > -1) and
+     (CameraID < length(CameraModels)) then
+  begin;
+    FCurrentCamera := CameraID;
+    FServerAddr    := CameraModels[CurrentCamera].CServerAddr;
+    FDCIMDir       := CameraModels[CurrentCamera].CRootDir;
+  end else
+  begin;   // default if no current camera
+    FCurrentCamera := 0;
+    FServerAddr    := 'http://oishare';
+    FDCIMDir       := '/DCIM';
+  end;
+end;
+
+Procedure TOIShareReader.SaveCameraSettingsToModel;  // Updates or adds camera model details to the CameraModels array
+begin;
+ If (FCurrentCamera > -1)                    and
+    (FCurrentCamera < length(FCameraModels)) then
+ begin;
+   FCameraModels[FCurrentCamera].CRootDir    := FDCIMDir;
+   FCameraModels[FCurrentCamera].CServerAddr := FServerAddr;
+ end; // else
+// AddNewCameraModel('New Model_' + InttoStr(length(FCameraModels) - 1)); // Not sure we want to do this as name inappropriate?
+end;
+
+Procedure TOiShareReader.AddNewCameraModel(AName: String);
+begin;   // Adds a new model if none present
+  If AName <> '' then
+  begin;
+    AName := RemoveEqualsSign(AName);  // to be used in ini file so = signs not allowed
+    Setlength(FCameraModels,length(FCameraModels) + 1);
+    FCurrentCamera := length(FCameraModels) - 1;
+    FCameraModels[FCurrentCamera].CID         := length(FCameraModels) - 1;
+    FCameraModels[FCurrentCamera].CName       := AName;
+    FCameraModels[FCurrentCamera].CRootDir    := FDCIMDir;
+    FCameraModels[FCurrentCamera].CServerAddr := FServerAddr;
+    FCameraModels[FCurrentCamera].CNotes      := 'No Notes';
+  end;
+end;
 
 end.
 

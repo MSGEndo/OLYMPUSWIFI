@@ -9,7 +9,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, CheckLst,
   ExtCtrls, ComCtrls, ShellCtrls, Arrow, EditBtn, Buttons, RTTICtrls,
-  OlympusShare;
+  OlympusShare, fpwebdata;
 type
 
   { TForm_Main }
@@ -23,19 +23,28 @@ type
     Btn_DeleteDLHxFiles: TButton;
     Btn_CancelDL: TButton;
     Button1: TButton;
+    Btn_TestServer: TButton;
+    Btn_SaveHTTP: TButton;
+    Btn_AddModel: TButton;
     CBox_DLHx: TCheckBox;
     ChBox_Timer: TCheckBox;
     CB_SDFiles: TCheckBox;
     ChLBox_DLHx: TCheckListBox;
     CLBox_SDImages: TCheckListBox;
     CLBox_SDDir: TCheckListBox;
+    CB_CameraModels: TComboBox;
     DirEdit_Images: TDirectoryEdit;
     Edit_RootDir: TEdit;
     Edit_ServerAddr: TEdit;
     Image_Banner: TImage;
     ImageView: TTIImage;
     Label1: TLabel;
+    Label10: TLabel;
+    Label12: TLabel;
+    Label14: TLabel;
+    Label_CameraNotes: TLabel;
     Label4: TLabel;
+    Label6: TLabel;
     Label_Plus: TLabel;
     Label_URL: TLabel;
     Label5: TLabel;
@@ -52,22 +61,26 @@ type
     Label8: TLabel;
     Label9: TLabel;
     Label_UseTimeSet1: TLabel;
-    Label_UseTimeSet2: TLabel;
-    Memo1: TMemo;
+    Label_LastDLImage: TLabel;
+    Memo_Settings: TMemo;
     Memo_Errors: TMemo;
+    Memo_Help: TMemo;
     PageControl_Main: TPageControl;
     Panel1: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
     Panel4: TPanel;
-    Panel5: TPanel;
+    Panel_Settings: TPanel;
     Panel6: TPanel;
     Panel7: TPanel;
+    Panel_Help: TPanel;
+    Panel_HelpTitle: TPanel;
     Panel_LastImage: TPanel;
     Panel_DownloadHxTitle: TPanel;
-    Panel_DownloadHxTitle1: TPanel;
+    Panel_SettingsTitle: TPanel;
     ProgressBar1: TProgressBar;
     ShListView_Files: TShellListView;
+    TS_Help: TTabSheet;
     TS_Transfer: TTabSheet;
     TS_Settings: TTabSheet;
     TSDownloadHx: TTabSheet;
@@ -75,8 +88,14 @@ type
     UpDown_TimeSet: TUpDown;
 
     //procedure Button1Click(Sender: TObject);  // original proof of concept
+    procedure Btn_AddModelClick(Sender: TObject);
+    procedure Btn_SaveHTTPClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure Btn_TestServerClick(Sender: TObject);
+    procedure CB_CameraModelsChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure ShListView_FilesSelectItem(Sender: TObject; Item: TListItem;
+      Selected: Boolean);
     Procedure UpdateLabelServerURL;
     procedure Btn_CancelDLClick(Sender: TObject);
     procedure Btn_MarkAllDLedClick(Sender: TObject);
@@ -117,42 +136,162 @@ implementation
 
 procedure TForm_Main.FormCreate(Sender: TObject);
 begin
-  OiLink                   := TOiShareReader.create;
+  OiLink                    := TOiShareReader.create;
   // Edit_ServerAddr.text     := 'http://oishare';
   // Edit_RootDir.Text        := /DCIM
-  Edit_ServerAddr.text     := OiLink.ServerAddr;
-  Edit_RootDir.Text        := OiLink.DCIMDir;
-  Label_CameraURL.caption := Edit_ServerAddr.text + '/' + Edit_RootDir.text;
-  DirEdit_Images.Text      := OiLink.DownloadDir;
-  DirEdit_Images.Directory := DirEdit_Images.Text;
-  ShListView_Files.Root    := DirEdit_Images.Text;
+  // Set up camer a model GUI
+
+  CB_CameraModels.Items     := Oilink.CameraModelsToList;
+  CB_CameraModels.ItemIndex := OiLink.CurrentCamera;
+  Edit_ServerAddr.text      := OiLink.ServerAddr;
+  Edit_RootDir.Text         := OiLink.DCIMDir;
+  Label_CameraURL.caption   := Edit_ServerAddr.text + Edit_RootDir.text;
+  Label_CameraNotes.caption := OiLink.CameraModels[OiLink.CurrentCamera].CNotes;
+  // Set up computer files GUI
+  DirEdit_Images.Text       := OiLink.DownloadDir;
+  DirEdit_Images.Directory  := DirEdit_Images.Text;
+  ShListView_Files.Root     := DirEdit_Images.Text;
+  // Other stuff
   UpdateDLoadList;
-  Timer_Transfer.interval := UpDown_TimeSet.Position;
-  Timer_Transfer.Enabled := ChBox_Timer.Checked;
+  Timer_Transfer.interval   := UpDown_TimeSet.Position;
+  Timer_Transfer.Enabled    := ChBox_Timer.Checked;
   If ChBox_Timer.Checked then
   begin;
     Label_Transfer.caption  := 'Transfering Timer On';
-    Timer_Transfer.enabled := true;
+    Timer_Transfer.enabled  := true;
   end else
   begin;
     Label_Transfer.caption  := 'Transfer Files Now';
-    Timer_Transfer.enabled := false;
+    Timer_Transfer.enabled  := false;
   end;
+  Memo_Help.lines.text := OiLink.HelpText;
+end;
+
+procedure TForm_Main.ShListView_FilesSelectItem(Sender: TObject;
+  Item: TListItem; Selected: Boolean);
+var
+  FName: String;
+begin
+  If Item <> nil then
+  begin
+    {$IFDEF WINDOWS}
+    FName := DirEdit_Images.Directory + '\' + Item.caption;
+    {$ELSE}
+    FName := DirEdit_Images.Directory + '/' + Item.caption; // Linux error here - returns incorrect image ? ShListView_Files.Items[Item.Index + 1].caption;
+    {$IFEND}
+    If (FileExists(FName)) then
+    Try
+      If Uppercase(ExtractFileExt(FName)) = '.JPG' then
+      Form_Main.ImageView.Picture.Jpeg.LoadFromFile(FName) else
+      If Uppercase(ExtractFileExt(FName)) = '.BMP' then
+      Form_Main.ImageView.Picture.Bitmap.LoadFromFile(FName) else
+      Form_Main.ImageView.Picture.Clear;
+      Label_LastDLImage.caption := 'Selected Image...';
+    Except
+     Form_Main.ImageView.Picture.Clear;
+     Label_LastDLImage.caption := 'Last File Downloaded';
+    end else
+    Form_Main.ImageView.Picture.Clear;;
+  end else
+  Form_Main.ImageView.Picture.Clear;;
 end;
 
 Procedure TForm_Main.UpdateLabelServerURL;
 begin;
-    OiLink.ServerAddr := Edit_ServerAddr.text;
-    If Edit_RootDir.text <> '' then
-    If Edit_RootDir.text[1] <> '/' then
-    Edit_RootDir.text := '/' + Edit_RootDir.text;
-    Oilink.DCIMDir    := Edit_RootDir.text;
-    Label_CameraURL.caption := Edit_ServerAddr.text + Edit_RootDir.text;
+  OiLink.ServerAddr := Edit_ServerAddr.text;
+  If Edit_RootDir.text <> '' then       // Add a / if not already present
+  If Edit_RootDir.text[1] <> '/' then
+  Edit_RootDir.text       := '/' + Edit_RootDir.text;
+  Oilink.DCIMDir          := Edit_RootDir.text;
+  Label_CameraURL.caption := Edit_ServerAddr.text + Edit_RootDir.text;
+  OiLink.SaveCameraSettingsToModel; // to the CameraModels array
+  OiLink.SaveCameraModelData;       // to ini file
 end;
 
 procedure TForm_Main.Button1Click(Sender: TObject);
 begin
-  PageControl_Main.ActivePageIndex := 2;
+  PageControl_Main.ActivePageIndex := 3;
+end;
+
+procedure TForm_Main.Btn_SaveHTTPClick(Sender: TObject);
+var
+ SD: TSaveDialog;
+ ts1: string;
+begin
+ Try
+   SD := TSaveDialog.Create(Self);
+   SD.InitialDir := GetCurrentDir;
+   ts1 := OiLink.RemoveIllegalFilenameChar(OiLink.CameraModels[OiLink.CurrentCamera].CName);
+   {$IFDEF WINDOWS}
+   SD.FileName   := GetCurrentDir + '\CameraHTTPData_' + ts1 + FormatDateTime('(dd_mm_yy_hh_nn_ss)', Now) + '.txt';
+   {$ELSE}
+   SD.FileName   := GetCurrentDir + '/CameraHTTPData_' + ts1 + FormatDateTime('dd_mm_yy_hh_nn_ss', Now) + '.txt';
+   {$ENDIF}
+   If SD.execute then
+   Memo_Settings.Lines.SaveToFile(SD.Filename);
+   Showmessage('Now please email the data file ' + SD.filename + ' to Martin at MSGEndoDoc@gmail.com to improve the program. Thanks' )
+ Finally
+   SD.free;
+ end;
+end;
+
+procedure TForm_Main.Btn_AddModelClick(Sender: TObject);
+var
+  ts1: Ansistring;
+begin
+  ts1 := Inputbox('Input the new camaera models name','Go on, type it in...','');
+  If ts1 > '' then
+  begin;
+    Oilink.AddNewCameraModel(ts1);
+    CB_CameraModels.items     := OiLink.CameraModelsToList;
+    CB_CameraModels.itemindex := CB_CameraModels.items.count -1;
+    CB_CameraModels.text      := CB_CameraModels.items[CB_CameraModels.itemindex];
+    Label_CameraNotes.caption := oiLink.CameraModels[CB_CameraModels.itemindex].CNotes;
+  end;
+  // Up to user to correct the preexisting server and DCIMDir data if incorrect.
+end;
+
+procedure TForm_Main.Btn_TestServerClick(Sender: TObject);
+var
+  AHTTPRecord: TStringlist;
+begin
+  // Header text about camera model and URL etc
+  Screen.Cursor := crHourGlass;
+  AHTTPRecord := TStringList.create;
+  AHTTPRecord.Insert(0,'CAMERA MODEL = '        + OiLink.CameraModels[OiLink.CurrentCamera].CName);
+  AHTTPRecord.Insert(1,'SERVER ADDRESS USED = ' + OiLink.CameraModels[OiLink.CurrentCamera].CServerAddr);
+  AHTTPRecord.Insert(2,'ROOT DIRECTORY USED = ' + OiLink.CameraModels[OiLink.CurrentCamera].CRootDir);
+  AHTTPRecord.Insert(3,'');
+  AHTTPRecord.Insert(4,'<----------- CAMERA DATA RECEIVED ----------->');
+  AHTTPRecord.Insert(5,'');
+  Oilink.GetSDCardData;
+
+  If OiLink.IsConnected then
+  begin;
+    AHTTPRecord.AddStrings(OiLink.HTTPRecord);
+    Memo_Settings.lines.text := AHTTPRecord.Text;
+  end else
+  begin;
+    AHTTPRecord.Add('Sorry: No Server Response');
+    AHTTPRecord.AddStrings(OiLink.HTTPRecord);
+    Memo_Settings.lines.text := AHTTPRecord.Text;
+  end;
+  DisplaySDCardFiles(length(OiLink.ImageLists)-1);
+  Screen.Cursor := crDefault;
+  FreeAndNil(AHTTPRecord);
+end;
+
+procedure TForm_Main.CB_CameraModelsChange(Sender: TObject);
+begin
+  If (CB_CameraModels.Items.count > 0) and
+     (length(OiLink.CameraModels) > 0) then
+  begin;
+    Oilink.UpdateCameraSettingsFromModel(CB_CameraModels.ItemIndex);
+    Edit_ServerAddr.text      := OiLink.CameraModels[OiLink.CurrentCamera].CServerAddr;
+    Edit_RootDir.text         := OiLink.CameraModels[OiLink.CurrentCamera].CRootDir;
+    Label_CameraURL.caption   := Edit_ServerAddr.text + Edit_RootDir.text;
+    Label_CameraNotes.caption := OiLink.CameraModels[OiLink.CurrentCamera].CNotes;
+  end;
 end;
 
 Procedure TForm_Main.UpdateDLoadList;
@@ -269,7 +408,7 @@ var                                                             // This means th
   a: integer;
 begin
  a := 2; // Start t 2 so dont delete the dolloaddir, camera server or camera root dir records
- If ChLBox_DLHx.Count > 2 then;
+ If ChLBox_DLHx.Count > 1 then;
  Repeat
    If (ChLBox_DLHx.Checked[a]) then
    begin
@@ -301,6 +440,8 @@ begin;
      OiLink.GetSDCardData;  // update SDcard directory and files listing
      DisplaySDCardFiles(length(OiLink.ImageLists)-1); // show the first directory and its files
      Btn_CancelDL.visible     := true;
+     Label_LastDLImage.caption := 'Last File Downloaded';
+     Form_Main.ImageView.Picture.Clear;
      Application.ProcessMessages;
 
      OiLink.DownloadImages(DirEdit_Images.Directory);
@@ -528,4 +669,5 @@ end;
 
 
 end.
+
 

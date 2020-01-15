@@ -1,35 +1,65 @@
-# OLYMPUSWIFI
-A desktop application to automate image download from Olympus cameras
+OLYMPUSWIFI
+www.github.com/MSGENDO/OLYMPUSWIFI
 
+Summary: This program allows the user to download images from a wireless enabled Olympus camera, leaving the originals on the SD card.
 
-MSGENDODOC
+  OS:      Windows 10 and Ubuntu 18.04 both working well, Mac OS not tested
+  DevTool: Lazarus 2.06 / FPC3.04
+  Camera: Olympus OM-D E-M10 Mark I, Mark 3 tested working
+  How it works: Main class TOiShareReader, inherted from a TfpHTTPClient component, manages connecion to the camera oer a wireless signal.
+                The TfpHTTPClient is an component which is not installed in Lazarus by default and needs to be installed in the fpWeb library
+                using Menu|Package!Install/Uninstall Packages.
 
-Hi everyone,
+  Why develop this program?  Olympus makes Android and iOS apps (Oi.Share) to allow WiFi download of images from their camera but do
+  not have an app for PC, Mac or Linux desktops. While a web browser can be pointed at the camera URL, this is cumbersome, and automated
+  downloading of image files is not possible using a web interfacem, or using the mobile and tablet Oishare app.
+  Now that the previous EyeFi WiFi enabled SD cards are no longer maid, a WiFi connection for Windows, Linux and Mac is needed.
 
-Since the Eye-Fi and Toshiba WiFi enabled SD cards have both been discontinued several years ago, there is no similar prodct now available on the market that i know of.  This dearth is presumably because most serious cameras now on the market have WiFi built in, so the commercial need for a WiFi SD card has reduced.  
+  'HOW TO USE THIS PROGRAM  + #13 + #10 + // TODO: need different EOL for Linux/macOS
 
-I have an Olympus OM-D E-M10.  I need to use Windows at work to shoot images of clients. At this time I am too busy to take out the SD card and load the images onto the PC, as this would distract me from dealing with my clients. Therefore I really valued my previous Eye-fi card as it automated image download to PC.  The Eye-Fi card sensed when new images were taken and then signalled to the PC to change wireless networks to the Eye-Fi card, automatically download the images to PC and then revert the computers WiFi connection back to my work router.  Brilliant - until Eye-fi stopped supporting the software and went out of business.  Toshiba took over the intellectual property from Eye-Fi but I couldn't get a new Toshiba card to work at all, and this is now also defunct.  
+     1.   Take some photos on your Olympus camera
+     2.   Use the Olympus camera menu to select Connection to Smartphone.  This starts the camera WiFi server.
+     3.   Connect your computer to this WiFi signal in the usual way for your operating system
+     4.   Run this OlympusWIFI program
+     5.   App Settings (Page 3): i)   Select your model of camera.  If your model is not there then use the Add button to add it.
+                                 ii)  Ensure the "Olympus Camera Server URL" is set correctly.
+                                      This is the same URL address minus the "/DCIM" you can type into a web browser to access your camera.
+                                      Change the server URL if needed
+                                      e.g. Model E-M10 Mark I URL = "http://oishare", Model E-M10 Mark III URL = "http://192.168.0.10"
+                                 iii) Ensure the "SDCard Root Directory" is set correctly. This is usually "/DCIM". Need initial forward slash.
+                                 iv)  Test your camera is connected with the "Test Camera Connection" button.
+                                      If connected the text box below will fill with HTTP data from your camera.
+                                      If not connected there will be no data.
+                                      Save this HTTP data to file with the "Save Camera Data To File" button. This text file can be
+                                      emailed to me at MSGEndoDoc@gmail.com so that I can improve the program.
+     6.   App Transfer Images Page (Page 1)
+                                 i)   Set the download directory ("Transfer Files to This Directory").  Camera images will end up here.
+                                 ii)  Option 1: Press the grey triangle once to transfer images from camera to computer
+                                      Option 2: Click the Repeat Timer checkbox and wait for the timer (e.g. 60s) to automate periodic image transfers.
+     NOTE1:  Files downoaded will be remembered and not downloaded again on later transfers.
+     NOTE2:  App Download History page (Page 2) lists all previously downloaded files.
+             Deleted selected file records here will allow those images to be download again from the camera on later transfers.
+     NOTE3:  The Download history is stored in the text file OlympusCameraDownloadRecord.txt.  Do not edit this file
+     NOTE4:  The list of camera models with known connection URL are stroed in the ini file OlympusCameraModels.ini. Do not edit this file.'
 
-Luckily my E-M10 has built in WiFi and can be connected to the Oishare olympus app in iOS or Android but I could not find a Windows version of Oishare.  I have therefore hacked the camera WiFi signal and found a way to read and download images from the camera to PC using some in house software I wrote, as I also do some coding.  I have open sourced this code and it can be downloaded from  https://github.com/MSGEndo/OLYMPUSWIFI  As I'm an older coder, the proejct it's written in Object Pascal using the Lazarus IDE (www.lazarus-ide.org), which a free open source coding language and free to use.  Please feel free to try my Windows cleint app for Olympus camera image downloads and it is useful to you and others.  Feel free to even modify and improve it, if you can code in Pascal (like your grandad!).  I have not been able to automatically swap my PC WiFi connection to and from the camera, so do need to manually change WiFi connections on the PC to link with the camera, but I can live with this.  
+     Enjoy
 
-Hope this is helpful to olympus camera / PC users
+     Martin Gale (Copyright 2020)
+     msgendodoc@gmail.com.au
+     www.github.com/MSGENDO/OLYMPUSWIFI
+     This program is open source and can be used for commercial and non commercial purposes (MIT licence) so long as
+     full acknowledgement is made of the authors original contribution in any distribution of the derived work. The software is as is,
+     and absolutely no warranty of suitability of purpose or efficacy and is given, and the authors accept no liability whatsoever
+     for its use, consequences or effects. If it is not suitable for your  purpose then do not use this software.
+     Otherwise, please make good use of it.
 
-Martin    
+See comments in the code for further explanations
 
-NOTES
-How to use this program
+Enjoy
 
-  1.  Take some photos on your Olympus camera
-  2.  Use the Olympus camera menu to select Connection to Smartphone.  This starts the camera WiFi server.
-  3.  Connect your computer to this WiFi signal in the usual way for your operating system
-  4.  Run this OlympusWIFI program
-  5.  Set the download directory as required ("Transfer Files to This Directory") where  from the will be transferred
-  6.  Option 1: Press the grey triangle once and wait for images on the SD card to be transferred to your computer's download directory
-  7.  Option 2: Click the Repeat Timer checkbox and wait for the timer (e.g. 60s) to automate image transfers periodically.
-  8.  Downloaded files will be remembered, so will not be downloaded again on later transfers.
+Martin Gale
+msgendodoc@gmail.com
 
-  Enjoy
-
-  Martin Gale ( 04/01/2020 Copyright.)
-  mail@isendo.com.au
-  This program is open source and can be used for commercial and non commercial purposes (MIT licence) so long as  full acknowledgement is made of the author's original contribution in any distribution of the derived work. The software is as is,  and no warranty of suitability of purpose or efficacy and is given, and the authors accept no liability whatsoever for its use, consequences or  effects.   If it is not suitable for your  purpose then do not use this software.  Otherwise, please make good use of it. 
+// TODO: There is still a very small memory leak somewhere of about $50k per access to the server - find this and fix it
+// TODO: Work out how to automatically seek and connect to the WiFi SSID signal even though another wifi signal may previously be connected - on Win and Linux
+     
