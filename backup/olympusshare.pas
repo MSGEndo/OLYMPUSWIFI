@@ -4,23 +4,14 @@ unit OlympusShare;
   OS:      Windows 10 and Ubuntu 18.04 both working well, Mac OS not tested
   DevTool: Lazarus 2.06 / FPC3.04
   Camera: Olympus OM-D E-M10 Mark I, Mark 3 tested working
-  How it works: Main class TOiShareReader, inherted from a TfpHTTPClient component, manages connecion to the camera oer a wireless signal.
-                The TfpHTTPClient is an component which is not installed in Lazarus by default and needs to be installed in the fpWeb library
+  How it works: Main class TOiShareReader manages connection to the camera over a wireless signal.
+                The TfpHTTPClient used in the conection is an component which is not installed in Lazarus by default and needs to be installed in the fpWeb library
                 using Menu|Package!Install/Uninstall Packages.
 
   Why develop this program?  Olympus makes Android and iOS apps (Oi.Share) to allow WiFi download of images from their camera but do
   not have an app for PC, Mac or Linux desktops. While a web browser can be pointed at the camera URL, this is cumbersome, and automated
   downloading of image files is not possible using a web interfacem, or using the mobile and tablet Oishare app.
   Now that the previous EyeFi WiFi enabled SD cards are no longer maid, a WiFi connection for Windows, Linux and Mac is needed.
-
-  Enjoy
-
-  Martin Gale ( 04/01/2020 Copyright.)
-  mail@isendo.com.au
-  This program is open source and can be used for commercial and non commercial purposes (MIT licence) so long as
-  full acknowledgement is made of the author's original contribution in any distribution of the derived work. The software is as is,
-  and no warranty of suitability of purpose or efficacy and is given, and the authors accept no liability whatsoever for its use, consequences or
-  effects.   If it is not suitable for your  purpose then do not use this software.  Otherwise, please make good use of it.
 
   'HOW TO USE THIS PROGRAM  + #13 + #10 + // TODO: need different EOL for Linux/macOS
 
@@ -65,7 +56,7 @@ See comments in the code for further explanations
 Enjoy
 
 Martin Gale
-mail@isendo.com.au
+msgendodoc@gmail.com
 
 // TODO: There is still a very small memory leak somewhere of about $50k per access to the server - find this and fix it
 // TODO: Work out how to automatically seek and connect to the WiFi SSID signal even though another wifi signal may previously be connected - on Win and Linux
@@ -117,10 +108,11 @@ end;
  //TOnUpdateGUIEvent = procedure(PercentDone: integer) of Object;    // an event for the TThread to be assigned to a procedure in the main form of the aplication
 
  {NOTES
- I initally decided that using a TThread would speed up the image download form the camer aand this worked for the OM-D E-M10 MkI  but for the
- OM-D E-M10 MkIII there was a camera server error on starting a second or more threwads while still downoading an earlier image. The MkIII camera sever
- can only cope with one image download at a time. So we dont need the threaded download now and I wrote Function TOIShareReader.GetOneImage to do
- a non threaded download of the file.  Presumably the SDCard directory and files downloads is so quick that the trheads overlapping are not a problem.
+ I initally decided that using a TThread would speed up the image download from the camera and this worked for the OM-D E-M10 MkI but for the
+ OM-D E-M10 MkIII there was a camera server error on starting a second or more threads while still downoading an earlier image. The MkIII camera server
+ can only cope with one image download at a time. So unfortunately we can't use the threaded download now, and I wrote Function TOIShareReader.GetOneImage to do
+ a non threaded download of each individual file, still allowing user intervention between files.  Presumably the SDCard directory and files downloads is so
+ quick that the trheads overlapping are not a problem.
  }
 
 
@@ -384,11 +376,7 @@ begin
   SetLength(FDirList,0);
   SetLength(FImageLists,0);
   ErrorList         := TStringList.create;
-  //{$IFDEF WINDOWS}
   FDownLoadDir      := GetCurrentDir;
-  //{$ELSE}
-  //FDownLoadDir      := GetCurrentDir;
-  //{$ENDIF}
   FDownloadedList   := TStringList.create;
   FLastDownloadTime := Now;
   FLastDownloaded   := '';
@@ -415,13 +403,13 @@ begin
     FDownloadDir := GetCurrentDir;
     If not DirectoryExists(FDownLoadDir) then FDownloadDir := GetCurrentDir;
 
-    // Load the previous run's camera's server address
+    // Load the previous run's camera's server address  // depreciated - now using OlympusCameraModels.ini
     //a := FindDownloadRecord('CameraURL='); // if no string found then -1
     //If (a > -1) and (length(FDownloadedList.strings[a]) > 10) then // i.e. 'CameraURL='
     //FServerAddr := Copy(FDownloadedList.strings[a],11,length(FDownloadedList.strings[a])-10) else
     //FServerAddr := 'http://oishare';
 
-    // Load the previous run's camera's root dir
+    // Load the previous run's camera's root dir        // depreciated - now using OlympusCameraModels.ini
     //a := FindDownloadRecord('CameraROOTDir='); // if no string found then -1
     //If (a > -1) and (length(FDownloadedList.strings[a]) > 14) then // i.e. 'CameraROOTDir='
     //FDCIMDir := Copy(FDownloadedList.strings[a],15,length(FDownloadedList.strings[a])-14) else
@@ -527,8 +515,8 @@ begin;         // which have not been downloaded by this program, and you do not
     end;
   end;
   RememberDownloadDir;
-  //RememberServerAddr;   // Depreciated as now using OlympusCameraModels.ini
-  //RememberSDRootDir;    // Depreciated as now using OlympusCameraModels.ini
+  //RememberServerAddr;   // Depreciated as now using OlympusCameraModels.ini  // depreciated - now using OlympusCameraModels.ini
+  //RememberSDRootDir;    // Depreciated as now using OlympusCameraModels.ini  // depreciated - now using OlympusCameraModels.ini
   {$IFDEF WINDOWS}
   Try FDownloadedList.SaveToFile(GetCurrentDir + '\OlympusCameraDownloadRecord.txt');
   except
@@ -615,7 +603,7 @@ begin
 end;
 {
 function TOIShareReader.GetDCIMResponseSL(AHTTPRequest: String; AResponseFilename: String): TStringlist;// Queries the Olympus camera http server for a response
-var
+var                                          // depreciated - now using OlympusCameraModels.ini
   AHTTPThread: TTransferImages;
 begin;
   AHTTPThread := TTransferImages.create;
@@ -626,7 +614,7 @@ begin;
 end;
 
 function TOIShareReader.GetDCIMResponseMS(AHTTPRequest: String;  AResponseFilename: String): TMemoryStream; // Queries the Olympus camera http server for a response
-var
+var                                         // depreciated - now using OlympusCameraModels.ini
   AHTTPThread: TTransferImages;
 begin;
   AHTTPThread := TTransferImages.create;
@@ -647,7 +635,6 @@ begin;
   Try
     AHTTPClient.SimpleGet(AHTTPRequest, AHTTPResponseSL);
     FHTTPRecord.AddStrings(AHTTPResponseSL);
-    //AHTTPClient.SimpleGet(AHTTPRequest, AHTTPResponseMS);
     // Save server response file to disk only if a filename with valid path has been given
     If   (AResponseFilename > '') and
          (DirectoryExists(ExtractFilePath(AResponseFilename))) then
@@ -657,7 +644,6 @@ begin;
         ErrorList.add('Sorry: Could not save file ' + AResponseFilename + ' [' + DateTimeToStr(Now,False) + ']');
       end;
   except;
-    //beep;
     ErrorList.add('Sorry: The Olympus camera could not be reached at ' + AHTTPRequest + ' [' + DateTimeToStr(Now,False) + ']');
   end;
   Result := AHTTPResponseSL;
@@ -677,7 +663,6 @@ begin;
   If (AHTTPRequest <> '') then
   Try
     AHTTPClient.SimpleGet(AHTTPRequest, AHTTPResponseMS);
-    //AHTTPClient.SimpleGet(AHTTPRequest, AHTTPResponseMS);
     // Save server response file to disk only if a filename with valid path has been given
     If   (AResponseFilename > '') and
          (DirectoryExists(ExtractFilePath(AResponseFilename))) then
@@ -687,7 +672,6 @@ begin;
         ErrorList.add('Sorry: Could not save file ' + AResponseFilename + ' [' + DateTimeToStr(Now,False) + ']');
       end;
   except;
-    //beep;
     ErrorList.add('Sorry: The Olympus camera could not be reached at ' + AHTTPRequest + ' [' + DateTimeToStr(Now,False) + ']');
   end;
   Result := AHTTPResponseMS;
@@ -701,15 +685,15 @@ var                                                                          // 
  a, b, S1, S2: integer;
  {THE FORMAT FOR THE CAMERA SERVER RESPONSE JAVASCRIPT ARRAY IS
 
-<script type="text/javascript">
-wlansd = new Array();
-wlansd[0]="/DCIM/101OLYMP/*.*,ZC080001.JPG,1072607,0,20360,31741";
-wlansd[1]="/DCIM/101OLYMP/*.*,ZC080002.JPG,1079420,0,20360,31752";
-...
+ <script type="text/javascript">
+ wlansd = new Array();
+ wlansd[0]="/DCIM/101OLYMP/*.*,ZC080001.JPG,1072607,0,20360,31741";
+ wlansd[1]="/DCIM/101OLYMP/*.*,ZC080002.JPG,1079420,0,20360,31752";
+ ...
 
 
-WHERE THE ELEMENTES DENOTE: PATH, FILENAME, FILEZIZE, UNKNOWN, DATE, TIME
-Stil have yet to figure out what units the date and time are in
+ WHERE THE CSV ELEMENTES DENOTE: PATH, FILENAME, FILESIZE, UNKNOWN, DATE, TIME
+ Stil have yet to figure out what units the date and time are in
  }
 
 begin
@@ -811,7 +795,7 @@ begin
 end;
 
 {procedure TOIShareReader.RememberServerAddr;    // Update the saved download directory to file too
-var                                             // Depreciated - now using the OlympusCameraModels.ini file
+var                                              // Depreciated - now using the OlympusCameraModels.ini file
   a: integer;
 begin
   a := FindDownloadRecord('CameraROOTDir=');
@@ -822,8 +806,8 @@ begin
   FDownloadedList.add('CameraROOTDir=' + FDCIMDir);
 end;
 
-procedure TOIShareReader.RememberSDRootDir;    // Update the saved download directory to file too
-var                                            // Depreciated - now using the OlympusCameraModels.ini file
+procedure TOIShareReader.RememberSDRootDir;     // Update the saved download directory to file too
+var                                             // Depreciated - now using the OlympusCameraModels.ini file
   a: integer;
 begin
   a := FindDownloadRecord('CameraURL=');
@@ -839,7 +823,7 @@ var
  AHTTPResponse: TStringList;
 Begin;
   Setlength(Result,0);
-  FServerAddr := AServerURL;                                       // AServerURL
+  FServerAddr := AServerURL;
   If (length(FServerAddr) > 0) and
      (length(FDCIMDir)    > 0) then
   begin;

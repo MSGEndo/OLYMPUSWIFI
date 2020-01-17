@@ -561,9 +561,9 @@ object Form_Main: TForm_Main
       Height = 802
       Top = 1
       Width = 1221
-      ActivePage = TS_Settings
+      ActivePage = TS_Transfer
       Align = alClient
-      TabIndex = 2
+      TabIndex = 0
       TabOrder = 0
       object TS_Transfer: TTabSheet
         Caption = 'Transfer Files    '

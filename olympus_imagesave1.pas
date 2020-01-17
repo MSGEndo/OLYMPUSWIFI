@@ -505,6 +505,7 @@ begin
   Screen.Cursor := crHourglass;
   Oilink.GetSDCardData;
   DisplaySDCardFiles(length(OiLink.ImageLists)-1);
+  Memo_Errors.lines.text  := OiLink.ErrorList.text;
   Screen.Cursor := crDefault;
 end;
 

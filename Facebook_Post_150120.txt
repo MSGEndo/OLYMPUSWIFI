@@ -1,0 +1,14 @@
+OLYMPUSWIFI : NEW IMAGE DOWNLOAD APP FOR WINDOWS, LINUX AMD MAC.  TESTED NEEDED - Please test the software for me. 
+
+Download at: www.github.com/MSGEndo/OLYMPUSWIFI
+
+Follow the Readme.md instructions - run the Olympus_ImageSave.exe file on Windows and the Olympus_ImageSave file on Linux. (Not yet tested on Mac)
+
+This app allows you to automate download of images from your Olympus OM-D camera to desktop computers.  I released this last week but feedback from users was that it only worked with my model of camera (OM-D E-M10 Mark I) and not others.  This is because Olympus have different camera server URLs for different cameras.  I have taken account of this by building in a database of different models into the software such that a user can select which model to use.   As yet, I have only included two models (OM-D  E-M10 Mark and Mark IIII) which I own.  I need testers to use other models and input the URL which works for their camera, and then to send me the data stream from those cameras such that I can code for their models.  A tool is provided on Page 3 of the software to get this data and save it to file, to be emailed to me.   Hope some of you can help and make this project useful for all Olympus camera owners.  
+
+Anyone wishing to contribute to this open sourced project please contact me.  For those who wish to compile the source, download Lazarus compiler from www.lazarus-ide.org and install this and open the project file Olympus_ImageSave.lpr, install the fpWeb package into the IDE which is needed, then compile the app..
+
+Cheers,
+
+Martin 
+msgendodoc at gmail dot com
