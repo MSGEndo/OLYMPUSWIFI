@@ -34,6 +34,7 @@ type
     CLBox_SDDir: TCheckListBox;
     CB_CameraModels: TComboBox;
     DirEdit_Images: TDirectoryEdit;
+    Edit_Rename: TEdit;
     Edit_RootDir: TEdit;
     Edit_ServerAddr: TEdit;
     Image_Banner: TImage;
@@ -62,6 +63,7 @@ type
     Label9: TLabel;
     Label_UseTimeSet1: TLabel;
     Label_LastDLImage: TLabel;
+    Label_UseTimeSet2: TLabel;
     Memo_Settings: TMemo;
     Memo_Errors: TMemo;
     Memo_Help: TMemo;
@@ -93,6 +95,7 @@ type
     procedure Button1Click(Sender: TObject);
     procedure Btn_TestServerClick(Sender: TObject);
     procedure CB_CameraModelsChange(Sender: TObject);
+    procedure Edit_RenameExit(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure ShListView_FilesSelectItem(Sender: TObject; Item: TListItem;
       Selected: Boolean);
@@ -294,6 +297,12 @@ begin
   end;
 end;
 
+procedure TForm_Main.Edit_RenameExit(Sender: TObject);
+begin
+  OiLink.FileNamePrefix := OiLink.RemoveIllegalFilenameChar(Edit_Rename.text);
+  Edit_Rename.text      := OiLink.FileNamePrefix;
+end;
+
 Procedure TForm_Main.UpdateDLoadList;
 begin
   ChLBox_DLHx.Items.Text := OiLink.BeautifyDownloadList.text;
@@ -434,6 +443,7 @@ begin;
      Arrow_Transfer.color    := clGreen;
      Screen.Cursor           := crHourglass;
      Label_Transfer.caption  := 'Transfering Files Now...';
+     OiLink.FileNamePrefix   := OiLink.RemoveIllegalFilenameChar(Edit_Rename.text);
      OiLink.ServerAddr       := Edit_ServerAddr.text; //http://oishare
      OiLink.DCIMDir          := Edit_RootDir.text;
      OiLink.DownloadDir      := DirEdit_Images.Directory;
@@ -505,6 +515,7 @@ begin
   Screen.Cursor := crHourglass;
   Oilink.GetSDCardData;
   DisplaySDCardFiles(length(OiLink.ImageLists)-1);
+  Memo_Errors.lines.text  := OiLink.ErrorList.text;
   Screen.Cursor := crDefault;
 end;
 

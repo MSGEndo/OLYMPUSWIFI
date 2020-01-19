@@ -615,10 +615,10 @@ object Form_Main: TForm_Main
             ParentFont = False
           end
           object Arrow_Transfer: TArrow
-            Left = 539
-            Height = 72
+            Left = 543
+            Height = 69
             Hint = 'Click to transfer files from camera SD card via WiFi'
-            Top = 192
+            Top = 208
             Width = 87
             ArrowColor = 11711154
             ArrowType = atRight
@@ -841,9 +841,9 @@ object Form_Main: TForm_Main
             end
           end
           object Label_Transfer: TLabel
-            Left = 510
-            Height = 136
-            Top = 280
+            Left = 509
+            Height = 123
+            Top = 296
             Width = 144
             Alignment = taCenter
             AutoSize = False
@@ -890,7 +890,7 @@ object Form_Main: TForm_Main
           object ChBox_Timer: TCheckBox
             Left = 524
             Height = 19
-            Top = 104
+            Top = 88
             Width = 20
             Color = clBlack
             OnClick = ChBox_TimerClick
@@ -900,7 +900,7 @@ object Form_Main: TForm_Main
           object Label_UseTimeSet: TLabel
             Left = 546
             Height = 21
-            Top = 102
+            Top = 86
             Width = 92
             Caption = 'Repeat Timer'
             Font.CharSet = ANSI_CHARSET
@@ -916,7 +916,7 @@ object Form_Main: TForm_Main
           object Label_TimeSet: TLabel
             Left = 513
             Height = 65
-            Top = 32
+            Top = 25
             Width = 78
             Alignment = taCenter
             AutoSize = False
@@ -933,7 +933,7 @@ object Form_Main: TForm_Main
           object UpDown_TimeSet: TUpDown
             Left = 605
             Height = 49
-            Top = 42
+            Top = 35
             Width = 37
             Max = 999
             Min = 30
@@ -944,7 +944,7 @@ object Form_Main: TForm_Main
           object Label13: TLabel
             Left = 513
             Height = 23
-            Top = 21
+            Top = 14
             Width = 78
             Alignment = taCenter
             AutoSize = False
@@ -994,9 +994,9 @@ object Form_Main: TForm_Main
             end
           end
           object Btn_CancelDL: TButton
-            Left = 539
+            Left = 543
             Height = 25
-            Top = 424
+            Top = 429
             Width = 75
             Caption = 'Cancel'
             Color = clSilver
@@ -1010,6 +1010,32 @@ object Form_Main: TForm_Main
             ParentFont = False
             TabOrder = 8
             Visible = False
+          end
+          object Edit_Rename: TEdit
+            Left = 480
+            Height = 29
+            Hint = 'Adds a'
+            Top = 155
+            Width = 200
+            Color = 6908265
+            OnExit = Edit_RenameExit
+            TabOrder = 9
+          end
+          object Label_UseTimeSet2: TLabel
+            Left = 489
+            Height = 21
+            Top = 131
+            Width = 185
+            Caption = 'Add Image Filename Prefix'
+            Font.CharSet = ANSI_CHARSET
+            Font.Color = clWhite
+            Font.Height = -16
+            Font.Name = 'Segoe UI'
+            Font.Pitch = fpVariable
+            Font.Quality = fqDraft
+            ParentColor = False
+            ParentFont = False
+            OnClick = ChBox_TimerClick
           end
         end
       end
