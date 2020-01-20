@@ -969,7 +969,7 @@ begin
             If (FileExists(FLastDownloaded)) and (not (Uppercase(ExtractFileExt(FLastDownloaded)) = '.ORF')) then
             Try
               If Uppercase(ExtractFileExt(FLastDownloaded)) = '.JPG' then
-              Form_Main.ImageView.Picture.Jpeg.LoadFromFile(FLastDownloaded) else
+              Form_Main.ImageView.Picture.Jpeg.LoadFromFile(FLastDownloaded);
               If Uppercase(ExtractFileExt(FLastDownloaded)) = '.BMP' then
               Form_Main.ImageView.Picture.Bitmap.LoadFromFile(FLastDownloaded);
             Except

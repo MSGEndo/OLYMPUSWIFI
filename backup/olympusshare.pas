@@ -966,7 +966,7 @@ begin
             {$ENDIF}
 
             inc(c); // counts how many downloads already done so far, for updating the GUI Progressbar
-            If (FileExists(FLastDownloaded)) and (not Uppercase(ExtractFileExt(FLastDownloaded)) = '.ORF') then
+            If (FileExists(FLastDownloaded)) and (not (Uppercase(ExtractFileExt(FLastDownloaded)) = '.ORF')) then
             Try
               If Uppercase(ExtractFileExt(FLastDownloaded)) = '.JPG' then
               Form_Main.ImageView.Picture.Jpeg.LoadFromFile(FLastDownloaded) else

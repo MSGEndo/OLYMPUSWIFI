@@ -19,7 +19,6 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Olympus_ImageSave1"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <TopLine Value="445"/>
         <CursorPos Y="468"/>
@@ -40,9 +39,10 @@
         <Filename Value="olympusshare.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="OlympusShare"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="942"/>
-        <CursorPos X="41" Y="970"/>
+        <TopLine Value="945"/>
+        <CursorPos X="15" Y="973"/>
         <UsageCount Value="190"/>
         <Bookmarks Count="2">
           <Item0 ID="2"/>
@@ -162,11 +162,10 @@
       </Unit18>
       <Unit19>
         <Filename Value="C:\lazarus\lcl\include\fpimagebitmap.inc"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="122"/>
         <CursorPos X="21" Y="141"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit19>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
