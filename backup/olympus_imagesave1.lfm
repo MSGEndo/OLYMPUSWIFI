@@ -1035,7 +1035,6 @@ object Form_Main: TForm_Main
             Font.Quality = fqDraft
             ParentColor = False
             ParentFont = False
-            Visible = False
             OnClick = ChBox_TimerClick
           end
         end

@@ -52,12 +52,12 @@ unit OlympusShare;
      for its use, consequences or effects. If it is not suitable for your purpose then do not use this software.
      Otherwise, please make good use of it.
 
-See comments in the code for further explanations
+     See comments in the code for further explanations
 
-Enjoy
+  Enjoy
 
-Martin Gale
-msgendodoc@gmail.com
+  Martin Gale
+  msgendodoc@gmail.com
 
 // TODO: There is still a very small memory leak somewhere of about $50k per access to the server - find this and fix it
 // TODO: Work out how to automatically seek and connect to the WiFi SSID signal even though another wifi signal may previously be connected - on Win and Linux
@@ -966,7 +966,7 @@ begin
             {$ENDIF}
 
             inc(c); // counts how many downloads already done so far, for updating the GUI Progressbar
-            If FileExists(FLastDownloaded) then
+            If (FileExists(FLastDownloaded)) and (not Uppercase(ExtractFileExt(FLastDownloaded)) = '.ORF') then
             Try
               If Uppercase(ExtractFileExt(FLastDownloaded)) = '.JPG' then
               Form_Main.ImageView.Picture.Jpeg.LoadFromFile(FLastDownloaded) else

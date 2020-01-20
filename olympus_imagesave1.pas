@@ -465,8 +465,6 @@ begin;
      ChLBox_DLHx.CheckAll(cbChecked);
      Arrow_Transfer.color    := $00606060;
      Screen.Cursor           := crDefault;
-     If Oilink.LastDownlowdedImage <> '' then
-     ImageView.Picture.Jpeg.LoadFromFile(Oilink.LastDownlowdedImage);
      ProgressBar1.position := 0;
      DisplaySDCardFiles(length(OiLink.ImageLists)-1); // updates display of which files have now been downloaded
      ShListView_Files.Root := '';
