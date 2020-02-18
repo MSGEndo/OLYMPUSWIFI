@@ -956,7 +956,8 @@ begin
             // The string '$!?' is the delimiter - unikely this will be naturally in a file name
 
             FDownloadedList.add(FImageLists[a].[b].APath + '$!?' + FImageLists[a].[b].AFileName + '$!?' +
-                                FImageLists[a].[b].ADate + '$!?' + FImageLists[a].[b].ATime     + '$!?' + BoolToStr(FImageLists[a].[b].ADownloaded));
+                                FImageLists[a].[b].ADate + '$!?' + FImageLists[a].[b].ATime     + '$!?' +
+                                BoolToStr(FImageLists[a].[b].ADownloaded, 'Downloaded', 'Not Downloaded'));
 
             {$IFDEF WINDOWS}   // Cross platform hassle fixed
             FLastDownloaded := FDownloadDir + '\' + FileNamePrefix + FImageLists[a].[b].AFileName;   // records the path and filename of the last downloaded image for display
@@ -969,7 +970,7 @@ begin
             If (FileExists(FLastDownloaded)) and (not (Uppercase(ExtractFileExt(FLastDownloaded)) = '.ORF')) then
             Try
               If Uppercase(ExtractFileExt(FLastDownloaded)) = '.JPG' then
-              Form_Main.ImageView.Picture.Jpeg.LoadFromFile(FLastDownloaded) else
+              Form_Main.ImageView.Picture.Jpeg.LoadFromFile(FLastDownloaded);
               If Uppercase(ExtractFileExt(FLastDownloaded)) = '.BMP' then
               Form_Main.ImageView.Picture.Bitmap.LoadFromFile(FLastDownloaded);
             Except
@@ -1019,13 +1020,13 @@ begin;
     If a > -1 then
     Result[a] := 'RECORD OF DOWNLOADED FILES';             // Removes the DownloadDir string in the TStringlist from user view
                                                            // but maintains that string in the TStringlist so count on delete lines is OK
-    a := FindDownloadRecord('CameraROOTDir=');
-    If a > -1 then
-    Result[a] := '----';                                   // Removes the CameraROOTDir= string in the TStringlist from user view
+    //a := FindDownloadRecord('CameraROOTDir=');           // Depreciated as using ini file now to store this data
+    //If a > -1 then
+    //Result[a] := '----';                                 // Removes the CameraROOTDir= string in the TStringlist from user view
                                                            // but maintains that string in the TStringlist so count on delete lines is OK
-    a := FindDownloadRecord('CameraURL=');
-    If a > -1 then
-    Result[a] := '----';                                   // Removes the CameraROOTDir= string in the TStringlist from user view
+    //a := FindDownloadRecord('CameraURL=');               // Depreciated as using ini file now to store this data
+    //If a > -1 then
+    //Result[a] := '----';                                   // Removes the CameraROOTDir= string in the TStringlist from user view
                                                            // but maintains that string in the TStringlist so count on delete lines is OK
     end;
   end;

@@ -1372,7 +1372,7 @@ object Form_Main: TForm_Main
               '                                   Option 2: Click the Repeat Timer checkbox and wait for the timer (e.g. 60s) to automate periodic image transfers. '
               '  NOTE1:  Files downoaded will be remembered and not downloaded again on later transfers. '
               '  NOTE2:  App Download History page (Page 2) lists all downloaded files. '
-              '          Deleted selected file records here will allow those images to be download again from the camera on later transfers.'
+              '          Deleted selected file records here will allow those images to be downloaded again from the camera on later transfers.'
               ''
               '  Enjoy '
               ''

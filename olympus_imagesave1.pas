@@ -328,8 +328,8 @@ end;
 
 procedure TForm_Main.Btn_MarkAllDLedClick(Sender: TObject);
 begin
-If MessageDlg('Confirm Mark All SD Card Files As Downlowded?',
-              'Are you sure you want to mark all current SD card files as already downlowded?',
+If MessageDlg('Confirm Mark All SD Card Files As Downloaded?',
+              'Are you sure you want to mark all current SD card files as already downloaded?',
                mtConfirmation ,[mbYes, mbNo],0) = mrYes then
  OiLink.RegisterAllSDCardFilesAsDownloaded;
  Self.DisplaySDCardFiles(0);
