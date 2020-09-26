@@ -4,18 +4,21 @@ www.github.com/MSGENDO/OLYMPUSWIFI
 Summary: This program allows the user to download images from a wireless enabled Olympus camera, leaving the originals on the SD card.
 
   OS:      Windows 10 and Ubuntu 18.04 both working well, Mac OS not tested
-  DevTool: Lazarus 2.06 / FPC3.04
-  Camera: Olympus OM-D E-M10 Mark I, Mark 3 tested working
-  How it works: Main class TOiShareReader, inherted from a TfpHTTPClient component, manages connecion to the camera oer a wireless signal.
-                The TfpHTTPClient is an component which is not installed in Lazarus by default and needs to be installed in the fpWeb library
-                using Menu|Package!Install/Uninstall Packages.
+  DevTool: Lazarus 2.06 / FPC3.04 (www.lazarus-ide.org)
+  Camera: Olympus OM-D E-M10 Mark I, Mark II, and Mark 3 tested working
+  
+  Why develop this program?  Olympus makes Android and iOS apps (Oi.Share) to allow WiFi download of images from their cameras but they do not have a stand alone app for PC, Mac   
+  or Linux desktops. The new Olympus WorkSpace app can do wireless image transfers but its pretty cumbersome, and not automated.  While a web browser can be pointed at the   
+  camera URL, this is a hassle ans also automated downloading of image files is not possible using a web interface, or using the mobile and tablet Oishare app.  Now that the  
+  previous EyeFi WiFi enabled SD cards are no longer made, a WiFi connection for Windows, Linux and Mac is needed.
 
-  Why develop this program?  Olympus makes Android and iOS apps (Oi.Share) to allow WiFi download of images from their camera but do
-  not have an app for PC, Mac or Linux desktops. While a web browser can be pointed at the camera URL, this is cumbersome, and automated
-  downloading of image files is not possible using a web interfacem, or using the mobile and tablet Oishare app.
-  Now that the previous EyeFi WiFi enabled SD cards are no longer maid, a WiFi connection for Windows, Linux and Mac is needed.
+  Developers:  How it works: Main class TOiShareReader, inherited from a TfpHTTPClient component, manages the WiFi connection to the camera over a wireless signal.
+                The TfpHTTPClient is a component which is not installed in Lazarus by default and needs to be installed as included in the fpWeb library
+                using Menu|Package!Install/Uninstall Packages. 
+                The code is in Object Pascal in the free Lazarus / Free Pascal IDE which can be downloaded from www.lazarus-ide.org  
 
-  'HOW TO USE THIS PROGRAM  // TODO: need different EOL for Linux/macOS
+
+  'HOW TO USE THIS PROGRAM  
 
      1.   Take some photos on your Olympus camera
      2.   Use the Olympus camera menu to select Connection to Smartphone.  This starts the camera WiFi server.
@@ -61,7 +64,6 @@ Enjoy
 
 Martin Gale
 msgendodoc@gmail.com
-
-// TODO: There is still a very small memory leak somewhere of about $50k per access to the server - find this and fix it
+// TODO: need different EOL for Linux/macOS
 // TODO: Work out how to automatically seek and connect to the WiFi SSID signal even though another wifi signal may previously be connected - on Win and Linux
      
